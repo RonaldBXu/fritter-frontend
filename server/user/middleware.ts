@@ -1,4 +1,5 @@
-import type {Request, Response, NextFunction} from 'express';
+import type { Request, Response, NextFunction } from 'express';
+import { Types } from 'mongoose';
 import UserCollection from '../user/collection';
 
 /**
@@ -56,10 +57,10 @@ const isValidPassword = (req: Request, res: Response, next: NextFunction) => {
  * Checks if a user with username and password in req.body exists
  */
 const isAccountExists = async (req: Request, res: Response, next: NextFunction) => {
-  const {username, password} = req.body as {username: string; password: string};
+  const { username, password } = req.body as { username: string; password: string };
 
   if (!username || !password) {
-    res.status(400).json({error: `Missing ${username ? 'password' : 'username'} credentials for sign in.`});
+    res.status(400).json({ error: `Missing ${username ? 'password' : 'username'} credentials for sign in.` });
     return;
   }
 
@@ -70,7 +71,7 @@ const isAccountExists = async (req: Request, res: Response, next: NextFunction) 
   if (user) {
     next();
   } else {
-    res.status(401).json({error: 'Invalid user login credentials provided.'});
+    res.status(401).json({ error: 'Invalid user login credentials provided.' });
   }
 };
 
@@ -78,24 +79,22 @@ const isAccountExists = async (req: Request, res: Response, next: NextFunction) 
  * Checks if a username in req.body is already in use
  */
 const isUsernameNotAlreadyInUse = async (req: Request, res: Response, next: NextFunction) => {
-  if (req.body.username !== undefined) { // If username is not being changed, skip this check
-    const user = await UserCollection.findOneByUsername(req.body.username);
+  const user = await UserCollection.findOneByUsername(req.body.username);
 
-    // If the current session user wants to change their username to one which matches
-    // the current one irrespective of the case, we should allow them to do so
-    if (user && (user?._id.toString() !== req.session.userId)) {
-      res.status(409).json({
-        error: 'An account with this username already exists.'
-      });
-      return;
-    }
+  // If the current session user wants to change their username to one which matches
+  // the current one irrespective of the case, we should allow them to do so
+  if (!user || (user?._id.toString() === req.session.userId)) {
+    next();
+    return;
   }
 
-  next();
+  res.status(409).json({
+    error: 'An account with this username already exists.'
+  });
 };
 
 /**
- * Checks if the user is logged in, that is, whether the userId is set in session
+ * Checks if the user is logged in, that is, whether the userId is set in session.
  */
 const isUserLoggedIn = (req: Request, res: Response, next: NextFunction) => {
   if (!req.session.userId) {
@@ -144,6 +143,36 @@ const isAuthorExists = async (req: Request, res: Response, next: NextFunction) =
   next();
 };
 
+/**
+ * Checks if a user object with user id id exists
+ */
+const doesUserExist = async (req: Request, res: Response, next: NextFunction) => {
+  let user = undefined;
+  if (req.params.userId) {
+    user = await UserCollection.findOneByUserId(req.params.userId);
+  }
+  if (!user) {
+    res.status(404).json({
+      error: 'user object was not found.'
+    });
+    return;
+  }
+  next();
+};
+
+/**
+ * Checks if userId is empty
+ */
+const nullUser = async (req: Request, res: Response, next: NextFunction) => {
+  if (!req.params.userId) {
+    res.status(400).json({
+      error: 'userId must be nonempty.'
+    });
+    return;
+  }
+  next();
+}
+
 export {
   isCurrentSessionUserExists,
   isUserLoggedIn,
@@ -152,5 +181,7 @@ export {
   isAccountExists,
   isAuthorExists,
   isValidUsername,
-  isValidPassword
+  isValidPassword,
+  doesUserExist,
+  nullUser,
 };

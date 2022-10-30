@@ -2,8 +2,10 @@ import type {Request, Response} from 'express';
 import express from 'express';
 import FreetCollection from '../freet/collection';
 import UserCollection from './collection';
+import CreditCollection from '../credit/collection';
 import * as userValidator from '../user/middleware';
 import * as util from './util';
+import * as creditUtil from '../credit/util';
 
 const router = express.Router();
 
@@ -16,7 +18,7 @@ const router = express.Router();
  *
  * @return - currently logged in user, or null if not logged in
  */
-router.get(
+ router.get(
   '/session',
   [],
   async (req: Request, res: Response) => {
@@ -107,10 +109,13 @@ router.post(
   ],
   async (req: Request, res: Response) => {
     const user = await UserCollection.addOne(req.body.username, req.body.password);
-    req.session.userId = user._id.toString();
+    const uid = user._id.toString();
+    req.session.userId = uid;
+    const credit = await CreditCollection.addOne(user._id);
     res.status(201).json({
       message: `Your account was created successfully. You have been logged in as ${user.username}`,
-      user: util.constructUserResponse(user)
+      user: util.constructUserResponse(user),
+      credit: creditUtil.constructCreditResponse(credit),
     });
   }
 );
@@ -159,12 +164,39 @@ router.delete(
     userValidator.isUserLoggedIn
   ],
   async (req: Request, res: Response) => {
-    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+    const userId = (await UserCollection.findOneByUserId(req.session.userId))._id;
     await UserCollection.deleteOne(userId);
     await FreetCollection.deleteMany(userId);
+    await CreditCollection.deleteOne(userId);
     req.session.userId = undefined;
     res.status(200).json({
       message: 'Your account has been deleted successfully.'
+    });
+  }
+);
+
+/**
+ * View User
+ *
+ * @name GET /api/users/:id
+ *
+ * @return {util.UserResponse} - An object with user info
+ * @throws {400} If userId is empty
+ * @throws {404} - If no user object with user id id exists
+ *
+ */
+ router.get(
+  '/:userId?',
+  [
+    userValidator.nullUser,
+    userValidator.doesUserExist,
+  ],
+  async (req: Request, res: Response) => {
+    const uid = req.params.userId as string;
+    const user = await UserCollection.findOneByUserId(uid);
+    res.status(200).json({
+      message: 'Here is the user object.',
+      user: util.constructUserResponse(user),
     });
   }
 );
