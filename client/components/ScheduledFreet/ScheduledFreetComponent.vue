@@ -39,7 +39,7 @@
       <textarea class="content" :value="draft_date" @input="draft_date = $event.target.value" />
     </div>
     <p v-else class="content">
-      Scheduled for {{ this.dateToString(scheduledfreet.publish_date) }}
+      Scheduled for {{ draft_date }}
     </p>
 
     <section class="alerts">
@@ -67,7 +67,7 @@ export default {
     return {
       editing: false, // Whether or not this scheduledfreet is in edit mode
       draft: this.scheduledfreet.content, // Potentially-new content for this scheduledfreet
-      draft_date: this.scheduledfreet.publish_date,
+      draft_date: this.dateToString(this.scheduledfreet.publish_date),
       alerts: {} // Displays success/error messages encountered during scheduledfreet modification
     };
   },
@@ -103,7 +103,7 @@ export default {
       this.request(params);
     },
     dateToString(d) {
-      return moment(d).toString();
+      return moment(d).format('MM-DD-YYYY HH:mm').toString();
     },
     submitEdit() {
       /**
