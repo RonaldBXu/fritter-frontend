@@ -7,6 +7,7 @@
         <h2>Welcome @{{ $store.state.username }}</h2>
       </header>
       <CreateFreetForm />
+      <CreateScheduledFreetForm />
     </section>
     <section v-else>
       <header>
@@ -61,11 +62,12 @@
 <script>
 import FreetComponent from '@/components/Freet/FreetComponent.vue';
 import CreateFreetForm from '@/components/Freet/CreateFreetForm.vue';
+import CreateScheduledFreetForm from '@/components/ScheduledFreet/CreateScheduledFreetForm.vue';
 import GetFreetsForm from '@/components/Freet/GetFreetsForm.vue';
 
 export default {
   name: 'FreetPage',
-  components: {FreetComponent, GetFreetsForm, CreateFreetForm},
+  components: {FreetComponent, GetFreetsForm, CreateFreetForm, CreateScheduledFreetForm},
   mounted() {
     this.$refs.getFreetsForm.submit();
   }

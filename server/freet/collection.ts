@@ -141,7 +141,6 @@ class FreetCollection {
   static async safeDeleteOne(freetId: Types.ObjectId): Promise<HydratedDocument<Freet>> {
     const freet = await FreetModel.findOne({ _id: freetId });
     freet.content = 'This freet has been deleted.';
-    freet.dateModified = new Date();
     await freet.save();
     return freet.populate('authorId');
   }

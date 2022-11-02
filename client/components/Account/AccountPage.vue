@@ -4,6 +4,9 @@
 <template>
   <main>
     <section>
+      <UserScheduledFreets />
+    </section>
+    <section>
       <header>
         <h2>Account settings for @{{ $store.state.username }}</h2>
       </header>
@@ -25,6 +28,7 @@ import ChangeUsernameForm from '@/components/Account/ChangeUsernameForm.vue';
 import ChangePasswordForm from '@/components/Account/ChangePasswordForm.vue';
 import DeleteAccountForm from '@/components/Account/DeleteAccountForm.vue';
 import LogoutForm from '@/components/Account/LogoutForm.vue';
+import UserScheduledFreets from '@/components/ScheduledFreet/UserScheduledFreets.vue';
 
 export default {
   name: 'AccountPage',
@@ -32,7 +36,8 @@ export default {
     ChangeUsernameForm,
     ChangePasswordForm,
     DeleteAccountForm,
-    LogoutForm
+    LogoutForm,
+    UserScheduledFreets,
   }
 };
 </script>

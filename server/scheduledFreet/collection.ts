@@ -44,7 +44,7 @@ class ScheduledFreetCollection {
    */
   static async findAll(): Promise<Array<HydratedDocument<ScheduledFreet>>> {
     // Retrieves freets and sorts them from most to least recent
-    return ScheduledFreetModel.find({}).sort({ publish_date: -1 });
+    return ScheduledFreetModel.find({}).sort({ publish_date: 1 });
   }
 
   /**
