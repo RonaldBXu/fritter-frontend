@@ -61,6 +61,10 @@ export default {
     scheduledfreet: {
       type: Object,
       required: true
+    },
+    getSFs: {
+      type: Function,
+      required: true
     }
   },
   data() {
@@ -78,7 +82,7 @@ export default {
        */
       this.editing = true; // Keeps track of if a scheduledfreet is being edited
       this.draft = this.scheduledfreet.content; // The content of our current "draft" while being edited
-      this.draft_date = this.scheduledfreet.publish_date;
+      this.draft_date = this.dateToString(this.scheduledfreet.publish_date);
     },
     stopEditing() {
       /**
@@ -86,7 +90,7 @@ export default {
        */
       this.editing = false;
       this.draft = this.scheduledfreet.content;
-      this.draft_date = this.scheduledfreet.publish_date;
+      this.draft_date = this.dateToString(this.scheduledfreet.publish_date);
     },
     deleteScheduledFreet() {
       /**
@@ -109,7 +113,7 @@ export default {
       /**
        * Updates scheduledfreet to have the submitted draft content.
        */
-      if (this.scheduledfreet.content === this.draft && this.scheduledfreet.publish_date === this.draft_date) {
+      if (this.scheduledfreet.content === this.draft && this.dateToString(this.scheduledfreet.publish_date) === this.dateToString(this.draft_date)) {
         const error = 'Error: Edited scheduledfreet content or publish date should be different.';
         this.$set(this.alerts, error, 'error'); // Set an alert to be the error text, timeout of 3000 ms
         setTimeout(() => this.$delete(this.alerts, error), 3000);
@@ -120,7 +124,8 @@ export default {
         method: 'PATCH',
         message: 'Successfully edited scheduledfreet!',
         body: JSON.stringify({ content: this.draft, publish_date: this.draft_date }),
-        callback: () => {
+        callback: async () => {
+          await this.getSFs();
           this.$set(this.alerts, params.message, 'success');
           setTimeout(() => this.$delete(this.alerts, params.message), 3000);
         }

@@ -3,22 +3,23 @@
 
 <template>
   <main>
-    <section>
+    <section v-if="$store.state.username === $route.params.username">
       <UserScheduledFreets />
-    </section>
-    <section>
       <header>
         <h2>Account settings for @{{ $store.state.username }}</h2>
       </header>
       <ChangeUsernameForm />
       <ChangePasswordForm />
-    </section>
-    <section>
       <header>
         <h2>Account management</h2>
       </header>
       <LogoutForm />
       <DeleteAccountForm />
+    </section>
+    <section v-else>
+      <header>
+        <h2>Profile for @{{ $route.params.username }}</h2>
+      </header>
     </section>
   </main>
 </template>

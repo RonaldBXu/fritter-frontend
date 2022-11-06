@@ -9,7 +9,7 @@ Vue.use(VueRouter);
 
 const routes = [
   {path: '/', name: 'Home', component: FreetsPage},
-  {path: '/account', name: 'Account', component: AccountPage},
+  {path: '/user/:username', name: 'User', component: AccountPage},
   {path: '/login', name: 'Login', component: LoginPage},
   {path: '*', name: 'Not Found', component: NotFound}
 ];

@@ -16,7 +16,7 @@
       </router-link>
       <router-link
         v-if="$store.state.username"
-        to="/account"
+        :to="{ path: `/user/${$store.state.username}`}"
       >
         Account
       </router-link>

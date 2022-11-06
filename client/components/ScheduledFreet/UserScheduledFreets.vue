@@ -13,8 +13,8 @@
           </h2>
         </div>
       </header>
-      <section v-if="$store.state.scheduledfreets.length">
-        <ScheduledFreetComponent v-for="scheduledfreet in $store.state.scheduledfreets" :key="scheduledfreet.id" :scheduledfreet="scheduledfreet" />
+      <section v-if="sfs.length">
+        <ScheduledFreetComponent v-for="scheduledfreet in sfs" :key="scheduledfreet.id" :scheduledfreet="scheduledfreet" :getSFs="getSFs"/>
       </section>
       <article v-else>
         <h3>No freets found.</h3>
@@ -29,8 +29,13 @@ import ScheduledFreetComponent from '@/components/ScheduledFreet/ScheduledFreetC
 export default {
   name: 'UserScheduledFreets',
   components: { ScheduledFreetComponent },
-  beforeMount () {
-    this.getSFs();
+  data() {
+    return {
+      sfs: [],
+    };
+  },
+  async created () {
+    await this.getSFs();
   },
   methods: {
     async getSFs() {
@@ -40,7 +45,7 @@ export default {
       if (!r.ok) {
         throw new Error(res.error);
       }
-      this.$store.commit('updateScheduledFreets', res);
+      this.sfs = [...res];
     }
   }
 };
