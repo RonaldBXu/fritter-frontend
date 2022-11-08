@@ -6,7 +6,8 @@ type CreditResponse = {
   _id: string;
   associated_user: string;
   credit: number;
-  credit_given: Array<Types.ObjectId>;
+  credit_given: Array<string>;
+  credit_received: Array<string>;
 };
 
 /**
@@ -28,6 +29,7 @@ const constructCreditResponse = (credit: HydratedDocument<Credit>): CreditRespon
     associated_user: creditCopy.associated_user.toString(),
     credit: creditCopy.credit,
     credit_given: creditCopy.credit_given,
+    credit_received: creditCopy.credit_received,
   };
 };
 

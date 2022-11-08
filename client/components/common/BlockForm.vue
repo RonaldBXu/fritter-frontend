@@ -2,29 +2,31 @@
 <!-- This is just an example; feel free to define any reusable components you want! -->
 
 <template>
-  <form @submit.prevent="submit">
-    <h3>{{ title }}</h3>
-    <article v-if="fields.length">
-      <div v-for="field in fields" :key="field.id">
-        <label :for="field.id">{{ field.label }}:</label>
-        <textarea v-if="field.id === 'content'" :name="field.id" :value="field.value"
-          @input="field.value = $event.target.value" />
-        <input v-else :type="field.id === 'password' ? 'password' : 'text'" :name="field.id" :value="field.value"
-          @input="field.value = $event.target.value">
-      </div>
-    </article>
-    <article v-else>
-      <p>{{ content }}</p>
-    </article>
-    <button type="submit">
-      {{ title }}
-    </button>
-    <section class="alerts">
-      <article v-for="(status, alert, index) in alerts" :key="index" :class="status">
-        <p>{{ alert }}</p>
+  <v-card style="padding: 10px;">
+    <form @submit.prevent="submit">
+      <h3>{{ title }}</h3>
+      <article v-if="fields.length">
+        <div v-for="field in fields" :key="field.id">
+          <label :for="field.id">{{ field.label }}:</label>
+          <v-textarea v-if="field.id === 'content'" :name="field.id" v-model="field.value" outlined />
+          <v-text-field v-else :type="field.id === 'password' ? 'password' : 'text'" :name="field.id"
+            v-model="field.value" />
+        </div>
       </article>
-    </section>
-  </form>
+      <article v-else>
+        <p>{{ content }}</p>
+      </article>
+      <v-btn @click="submit">
+        {{ title }}
+      </v-btn>
+      <section class="alerts">
+        <article v-for="(status, alert, index) in alerts" :key="index" :class="status">
+          <p>{{ alert }}</p>
+        </article>
+      </section>
+    </form>
+  </v-card>
+
 </template>
 
 <script>
@@ -97,12 +99,10 @@ export default {
 
 <style scoped>
 form {
-  border: 1px solid #111;
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin-bottom: 14px;
   position: relative;
 }
 

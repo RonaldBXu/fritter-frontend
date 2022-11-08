@@ -90,17 +90,18 @@ class CreditCollection {
    * @param {string} other_uid - The associated user id of the person whose credit is being changed
    * @return {Promise<HydratedDocument<Credit>>} - The updated credit
    */
-  static async updateCreditScore(uid: Types.ObjectId, other_uid: Types.ObjectId): Promise<{ credit: HydratedDocument<Credit>, otherCredit: HydratedDocument<Credit> }> {
-    const credit = await CreditModel.findOne({ associated_user: uid });
-    const otherCredit = await CreditModel.findOne({ associated_user: other_uid });
+  static async updateCreditScore(uid: string, other_uid: string): Promise<{ credit: HydratedDocument<Credit>, otherCredit: HydratedDocument<Credit> }> {
+    const credit = await CreditCollection.findOneByUsername(uid);
+    const otherCredit = await CreditCollection.findOneByUsername(other_uid);
     if (credit.credit_given.includes(other_uid)) {
       const ind = credit.credit_given.indexOf(other_uid);
       credit.credit_given.splice(ind, 1);
-      //credit.credit_given.delete(other_uid);
+      const rInd = otherCredit.credit_received.indexOf(uid);
+      otherCredit.credit_received.splice(rInd, 1);
       otherCredit.credit = (otherCredit.credit as number) - 1;
     } else {
-      //credit.credit_given.add(other_uid)
-      credit.credit_given.push(other_uid)
+      otherCredit.credit_received.push(uid);
+      credit.credit_given.push(other_uid);
       otherCredit.credit = (otherCredit.credit as number) + 1;
     }
     await credit.save();

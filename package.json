@@ -22,8 +22,11 @@
         "mongoose": "^6.6.2",
         "morgan": "~1.10.0",
         "nanoid": "^3.3.4",
+        "sass": "^1.56.0",
+        "sass-loader": "^13.1.0",
         "vue": "^2.7.13",
         "vue-router": "^3.6.5",
+        "vuetify": "^2.6.12",
         "vuex": "^3.6.2",
         "vuex-persistedstate": "^4.1.0"
     },
@@ -54,7 +57,9 @@
                 "files": [
                     "**/*.ts"
                 ],
-                "excludedFiles": ["client/**"],
+                "excludedFiles": [
+                    "client/**"
+                ],
                 "extends": [
                     "xo",
                     "xo-typescript/space",

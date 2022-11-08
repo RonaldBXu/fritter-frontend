@@ -11,7 +11,8 @@ export type Credit = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
   associated_user: Types.ObjectId;
   credit: number;
-  credit_given: Array<Types.ObjectId>;
+  credit_given: Array<string>;
+  credit_received: Array<string>;
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
@@ -30,7 +31,11 @@ const CreditSchema = new Schema<Credit>({
   },
   // The date the user joined
   credit_given: {
-    type: [Schema.Types.ObjectId],
+    type: [String],
+    required: true
+  },
+  credit_received: {
+    type: [String],
     required: true
   }
 });

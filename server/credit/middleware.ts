@@ -7,15 +7,15 @@ import CreditCollection from './collection';
  * Checks if the other user exists in the database.
  */
 const doesOtherUserExist = async (req: Request, res: Response, next: NextFunction) => {
-  if (!req.params.otherUserId) {
+  if (!req.params.otherUsername) {
     res.status(400).json({
-      error: 'Other User id cannot be blank.'
+      error: 'Other Username cannot be blank.'
     });
     return;
   }
   let user = undefined;
-  if (req.params.otherUserId) {
-    user = await UserCollection.findOneByUsername(req.params.otherUserId);
+  if (req.params.otherUsername) {
+    user = await UserCollection.findOneByUsername(req.params.otherUsername);
   }
   if (!user) {
     res.status(404).json({
@@ -30,7 +30,7 @@ const doesOtherUserExist = async (req: Request, res: Response, next: NextFunctio
  * Makes sure that the other user is not yourself.
  */
 const isOtherUserMe = async (req: Request, res: Response, next: NextFunction) => {
-  const other_user = await UserCollection.findOneByUsername(req.params.otherUserId);
+  const other_user = await UserCollection.findOneByUsername(req.params.otherUsername);
   if (other_user._id.toString() === req.session.userId) {
     res.status(412).json({
       error: 'You cannot give/take credit from yourself.'
@@ -45,8 +45,8 @@ const isOtherUserMe = async (req: Request, res: Response, next: NextFunction) =>
  */
 const doesCreditExist = async (req: Request, res: Response, next: NextFunction) => {
   let user = undefined;
-  if (req.params.userId) {
-    user = await CreditCollection.findOneByUserId(req.params.userId);
+  if (req.params.username) {
+    user = await CreditCollection.findOneByUsername(req.params.username);
   }
   if (!user) {
     res.status(404).json({
@@ -60,8 +60,8 @@ const doesCreditExist = async (req: Request, res: Response, next: NextFunction) 
 /**
  * Checks if the other user exists in the database.
  */
-const doesIdExist = async (req: Request, res: Response, next: NextFunction) => {
-  if (!req.params.userId) {
+const doesUserExist = async (req: Request, res: Response, next: NextFunction) => {
+  if (!req.params.username) {
     res.status(400).json({
       error: 'User id cannot be blank.'
     });
@@ -72,6 +72,6 @@ const doesIdExist = async (req: Request, res: Response, next: NextFunction) => {
 export {
   doesOtherUserExist,
   isOtherUserMe,
-  doesIdExist,
+  doesUserExist,
   doesCreditExist,
 };

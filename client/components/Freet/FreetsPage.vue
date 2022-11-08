@@ -3,16 +3,21 @@
 <template>
   <main>
     <section v-if="$store.state.username">
+      <br/>
       <header>
         <h2>Welcome @{{ $store.state.username }}</h2>
       </header>
+      <br/>
       <CreateFreetForm />
+      <br/>
       <CreateScheduledFreetForm />
     </section>
     <section v-else>
+      <br/>
       <header>
         <h2>Welcome to Fritter!</h2>
       </header>
+      <br/>
       <article>
         <h3>
           <router-link to="/login">
@@ -23,6 +28,7 @@
       </article>
     </section>
     <section>
+      <br/>
       <header>
         <div class="left">
           <h2>
@@ -36,11 +42,12 @@
           <GetFreetsForm
             ref="getFreetsForm"
             value="author"
-            placeholder="🔍 Filter by author (optional)"
+            placeholder="🔍 Author"
             button="🔄 Get freets"
           />
         </div>
       </header>
+      <br/>
       <section
         v-if="$store.state.freets.length"
       >

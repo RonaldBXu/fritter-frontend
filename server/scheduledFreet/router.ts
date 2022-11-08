@@ -10,40 +10,22 @@ import UserCollection from '../user/collection';
 const router = express.Router();
 
 /**
- * Get all the scheduled freets
+ * Get scheduled freets of logged in user.
  *
  * @name GET /api/scheduledfreets
  *
- * @return {util.ScheduledFreetResponse[]} - A list of all the scheduled freets 
- */
-/**
- * Get scheduled freets by author.
- *
- * @name GET /api/scheduledfreets?authorId=id
- *
- * @return {util.ScheduledFreetResponse[]} - An array of scheduled freets created by user with id, authorId
- * @throws {400} - If authorId is not given
- * @throws {404} - If no user has given authorId
+ * @return {util.ScheduledFreetResponse[]} - An array of scheduled freets
+ * @throws {403} - If the user is not logged in
  *
  */
 router.get(
   '/',
-  async (req: Request, res: Response, next: NextFunction) => {
-    // Check if authorId query parameter was supplied
-    if (req.query.author !== undefined) {
-      next();
-      return;
-    }
-
-    const allScheduledFreets = await ScheduledFreetCollection.findAll();
-    const response = allScheduledFreets.map(util.constructScheduledFreetResponse);
-    res.status(200).json(response);
-  },
   [
-    userValidator.isAuthorExists
+    userValidator.isUserLoggedIn,
   ],
   async (req: Request, res: Response) => {
-    const authorScheduledFreets = await ScheduledFreetCollection.findAllByUsername(req.query.author as string);
+    const username = (await UserCollection.findOneByUserId(req.session.userId)).username;
+    const authorScheduledFreets = await ScheduledFreetCollection.findAllByUsername(username);
     const response = authorScheduledFreets.map(util.constructScheduledFreetResponse);
     res.status(200).json(response);
   }

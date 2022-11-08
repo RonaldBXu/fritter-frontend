@@ -71,7 +71,7 @@ router.post(
   async (req: Request, res: Response) => {
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
     let freet;
-    if (req.body.replyingTo.length !== 0) {
+    if (req.body.replyingTo && req.body.replyingTo.length !== 0) {
       freet = await FreetCollection.addReply(userId, req.body.content, req.body.replyingTo);
     } else {
       freet = await FreetCollection.addOne(userId, req.body.content);

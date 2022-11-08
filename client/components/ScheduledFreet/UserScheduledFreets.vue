@@ -1,11 +1,10 @@
 <!-- Default page that also displays freets -->
 
 <template>
-  <main>
-    <header>
-      <h2>Welcome @{{ $store.state.username }}</h2>
-    </header>
-    <section>
+
+  <v-card style="padding: 10px;">
+
+    <section v-if="sfs.length">
       <header>
         <div class="left">
           <h2>
@@ -13,14 +12,16 @@
           </h2>
         </div>
       </header>
-      <section v-if="sfs.length">
-        <ScheduledFreetComponent v-for="scheduledfreet in sfs" :key="scheduledfreet.id" :scheduledfreet="scheduledfreet" :getSFs="getSFs"/>
-      </section>
-      <article v-else>
-        <h3>No freets found.</h3>
-      </article>
+      <ScheduledFreetComponent v-for="scheduledfreet in sfs" :key="scheduledfreet.id" :scheduledfreet="scheduledfreet"
+        :getSFs="getSFs" />
     </section>
-  </main>
+    <article v-else>
+      <h3>No Scheduled Freets!</h3>
+    </article>
+
+  </v-card>
+
+
 </template>
 
 <script>
@@ -34,7 +35,7 @@ export default {
       sfs: [],
     };
   },
-  async created () {
+  async created() {
     await this.getSFs();
   },
   methods: {

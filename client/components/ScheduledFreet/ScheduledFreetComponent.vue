@@ -2,52 +2,63 @@
 <!-- We've tagged some elements with classes; consider writing CSS using those classes to style them... -->
 
 <template>
-  <article class="scheduledfreet">
-    <header>
-      <h3 class="author">
-        @{{ $store.state.username }}
-      </h3>
-      <div class="actions">
-        <button v-if="editing" @click="submitEdit">
-          ✅ Save changes
-        </button>
-        <button v-if="editing" @click="stopEditing">
-          🚫 Discard changes
-        </button>
-        <button v-if="!editing" @click="startEditing">
-          ✏️ Edit
-        </button>
-        <button @click="deleteScheduledFreet">
-          🗑️ Delete
-        </button>
+  <div>
+    <v-card class="scheduledfreet">
+      <header>
+        <h3 class="author">
+          @{{ $store.state.username }}
+        </h3>
+        <br />
+        <div v-if="editing">
+            <v-btn @click="submitEdit">
+              ✅ Save changes
+            </v-btn>
+            <v-btn @click="stopEditing">
+              🚫 Discard changes
+            </v-btn>
+            <v-btn @click="deleteFreet">
+              🗑️ Delete
+            </v-btn>
+          </div>
+          <div v-else>
+            <v-btn @click="startEditing">
+              ✏️ Edit
+            </v-btn>
+            <v-btn @click="deleteScheduledFreet">
+              🗑️ Delete
+            </v-btn>
+          </div>
+      </header>
+      <div v-if="editing">
+        <p class="info">
+          Content
+        </p>
+        <v-textarea class="content" v-model="draft" />
       </div>
-    </header>
-    <div v-if="editing">
-      <p class="info">
-        Content
-      </p>
-      <textarea class="content" :value="draft" @input="draft = $event.target.value" />
-    </div>
 
-    <p v-else class="content">
-      {{ scheduledfreet.content }}
-    </p>
-    <div v-if="editing">
-      <p class="info">
-        Publish Date
+      <p v-else class="content">
+        {{ scheduledfreet.content }}
       </p>
-      <textarea class="content" :value="draft_date" @input="draft_date = $event.target.value" />
-    </div>
-    <p v-else class="content">
-      Scheduled for {{ draft_date }}
-    </p>
+      <div v-if="editing">
+        <p class="info">
+          Publish Date
+        </p>
+        <textarea class="content" :value="draft_date" @input="draft_date = $event.target.value" />
+      </div>
+      <p v-else class="content">
+        Scheduled for {{ draft_date }}
+      </p>
 
-    <section class="alerts">
-      <article v-for="(status, alert, index) in alerts" :key="index" :class="status">
-        <p>{{ alert }}</p>
-      </article>
-    </section>
-  </article>
+      <section class="alerts">
+        <article v-for="(status, alert, index) in alerts" :key="index" :class="status">
+          <p>{{ alert }}</p>
+        </article>
+      </section>
+      <br />
+    </v-card>
+
+  </div>
+
 </template>
 
 <script>

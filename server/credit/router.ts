@@ -1,6 +1,7 @@
 import type {Request, Response} from 'express';
 import express from 'express';
 import CreditCollection from './collection';
+import UserCollection from '../user/collection';
 import * as creditValidator from './middleware';
 import * as userValidator from '../user/middleware';
 import * as util from './util';
@@ -10,25 +11,28 @@ const router = express.Router();
 /**
  * View Credit
  *
- * @name GET /api/credits/:id
+ * @name GET /api/credits/:username
  *
  * @return {util.CreditResponse} - An object with your credit
- * @throws {400} - If userId is empty
- * @throws {404} - If no credit object with associated user id id exists
+ * @throws {400} - If username is empty
+ * @throws {404} - If no credit object with associated username username exists
  *
  */
  router.get(
-  '/:userId?',
+  '/:username?',
   [
-    creditValidator.doesIdExist,
+    userValidator.isUserLoggedIn,
+    creditValidator.doesUserExist,
     creditValidator.doesCreditExist,
   ],
   async (req: Request, res: Response) => {
-    const uid = req.params.userId as string;
-    const credit = await CreditCollection.findOneByUserId(uid);
+    const uid = req.params.username as string;
+    const username = (await UserCollection.findOneByUserId(req.session.userId)).username;
+    const credit = await CreditCollection.findOneByUsername(uid);
     res.status(200).json({
       message: 'Here is the credit object.',
       credit: util.constructCreditResponse(credit),
+      currentUser: username,
     });
   }
 );
@@ -46,16 +50,15 @@ const router = express.Router();
  *
  */
  router.patch(
-  '/:otherUserId?',
+  '/:otherUsername?',
   [
     userValidator.isUserLoggedIn,
     creditValidator.doesOtherUserExist,
     creditValidator.isOtherUserMe,
   ],
   async (req: Request, res: Response) => {
-    const uid = (await CreditCollection.findOneByUserId(req.session.userId)).associated_user;
-    const other_uid = (await CreditCollection.findOneByUsername(req.params.otherUserId)).associated_user;
-    const twoCreditObj = await CreditCollection.updateCreditScore(uid, other_uid);
+    const username = (await UserCollection.findOneByUserId(req.session.userId)).username;
+    const twoCreditObj = await CreditCollection.updateCreditScore(username, req.params.otherUsername);
     res.status(200).json({
       message: 'Credit updated successfully.',
       credit: util.constructCreditResponse(twoCreditObj.credit),

@@ -2,66 +2,64 @@
 <!-- We've tagged some elements with classes; consider writing CSS using those classes to style them... -->
 
 <template>
-  <article
-    class="freet"
-  >
-    <header>
-      <h3 class="author">
-        @{{ freet.author }}
-      </h3>
-      <div
-        v-if="$store.state.username === freet.author"
-        class="actions"
-      >
-        <button
-          v-if="editing"
-          @click="submitEdit"
-        >
-          ✅ Save changes
-        </button>
-        <button
-          v-if="editing"
-          @click="stopEditing"
-        >
-          🚫 Discard changes
-        </button>
-        <button
-          v-if="!editing"
-          @click="startEditing"
-        >
-          ✏️ Edit
-        </button>
-        <button @click="deleteFreet">
-          🗑️ Delete
-        </button>
+  <div>
+    <v-card class="freet">
+      <header>
+        <h3 class="author" @click="toUser">
+          @{{ freet.author }}
+        </h3>
+        <div v-if="$store.state.username === freet.author" class="actions">
+          <br />
+          <div v-if="editing">
+            <v-btn @click="submitEdit">
+              ✅ Save changes
+            </v-btn>
+            <v-btn @click="stopEditing">
+              🚫 Discard changes
+            </v-btn>
+            <v-btn @click="deleteFreet">
+              🗑️ Delete
+            </v-btn>
+          </div>
+          <div v-else>
+            <v-btn @click="startEditing">
+              ✏️ Edit
+            </v-btn>
+            <v-btn @click="deleteFreet">
+              🗑️ Delete
+            </v-btn>
+          </div>
+        </div>
+      </header>
+      <br />
+      <v-textarea v-if="editing" class="content" v-model="draft" outlined />
+      <div v-else>
+        <p class="content">
+          {{ freet.content }}
+        </p>
+        <br />
       </div>
-    </header>
-    <textarea
-      v-if="editing"
-      class="content"
-      :value="draft"
-      @input="draft = $event.target.value"
-    />
-    <p
-      v-else
-      class="content"
-    >
-      {{ freet.content }}
-    </p>
-    <p class="info">
-      Posted at {{ freet.dateModified }}
-      <i v-if="freet.edited">(edited)</i>
-    </p>
-    <section class="alerts">
-      <article
-        v-for="(status, alert, index) in alerts"
-        :key="index"
-        :class="status"
-      >
-        <p>{{ alert }}</p>
-      </article>
-    </section>
-  </article>
+      <div v-if="!editing">
+        <v-btn @click="reply">
+          ↩️ Reply
+        </v-btn>
+        <br />
+        <br />
+      </div>
+
+      <p class="info">
+        Posted at {{ freet.dateModified }}
+        <i v-if="freet.dateModified !== freet.dateCreated">(edited)</i>
+      </p>
+
+      <section class="alerts">
+        <article v-for="(status, alert, index) in alerts" :key="index" :class="status">
+          <p>{{ alert }}</p>
+        </article>
+      </section>
+    </v-card>
+    <br />
+  </div>
 </template>
 
 <script>
@@ -82,6 +80,9 @@ export default {
     };
   },
   methods: {
+    reply() {
+      console.log('open modal for reply')
+    },
     startEditing() {
       /**
        * Enables edit mode on this freet.
@@ -110,6 +111,9 @@ export default {
       };
       this.request(params);
     },
+    toUser() {
+      this.$router.push(`/user/${this.freet.author}`);
+    },
     submitEdit() {
       /**
        * Updates freet to have the submitted draft content.
@@ -124,7 +128,7 @@ export default {
       const params = {
         method: 'PATCH',
         message: 'Successfully edited freet!',
-        body: JSON.stringify({content: this.draft}),
+        body: JSON.stringify({ content: this.draft }),
         callback: () => {
           this.$set(this.alerts, params.message, 'success');
           setTimeout(() => this.$delete(this.alerts, params.message), 3000);
@@ -140,7 +144,7 @@ export default {
        * @param params.callback - Function to run if the the request succeeds
        */
       const options = {
-        method: params.method, headers: {'Content-Type': 'application/json'}
+        method: params.method, headers: { 'Content-Type': 'application/json' }
       };
       if (params.body) {
         options.body = params.body;
@@ -168,8 +172,14 @@ export default {
 
 <style scoped>
 .freet {
-    border: 1px solid #111;
-    padding: 20px;
-    position: relative;
+  border: 1px solid #111;
+  padding: 20px;
+  position: relative;
+}
+
+.author {
+  color: rgb(62, 62, 253);
+  text-decoration: underline;
+  cursor: pointer;
 }
 </style>

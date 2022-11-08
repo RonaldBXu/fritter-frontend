@@ -31,6 +31,7 @@ export default {
 <style>
 * {
   box-sizing: border-box;
+  font-family: Arial;
 }
 
 body {
