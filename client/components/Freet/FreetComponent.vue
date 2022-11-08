@@ -2,8 +2,8 @@
 <!-- We've tagged some elements with classes; consider writing CSS using those classes to style them... -->
 
 <template>
-  <div>
-    <v-card class="freet">
+  <div v-if="(dispRoute && freet.author === $route.params.username) || !dispRoute">
+    <v-card class="freet" color="#E3F2FD">
       <header>
         <h3 class="author" @click="toUser">
           @{{ freet.author }}
@@ -32,7 +32,7 @@
         </div>
       </header>
       <br />
-      <v-textarea v-if="editing" class="content" v-model="draft" outlined />
+      <v-textarea v-if="editing" class="content" v-model="draft" outlined no-resize :rules="rules" counter />
       <div v-else>
         <p class="content">
           {{ freet.content }}
@@ -70,13 +70,18 @@ export default {
     freet: {
       type: Object,
       required: true
+    },
+    dispRoute: {
+      type: Boolean,
+      required: false
     }
   },
   data() {
     return {
       editing: false, // Whether or not this freet is in edit mode
       draft: this.freet.content, // Potentially-new content for this freet
-      alerts: {} // Displays success/error messages encountered during freet modification
+      alerts: {}, // Displays success/error messages encountered during freet modification
+      rules: [v => (v.length <= 140) && (v.length > 0) || 'Must be between 1 and 140 characters'],
     };
   },
   methods: {

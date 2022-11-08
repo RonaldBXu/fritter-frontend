@@ -2,17 +2,17 @@
 <!-- This is just an example; feel free to define any reusable components you want! -->
 
 <template>
-  <v-card style="padding: 10px;">
+  <v-card style="padding: 10px;" color="#E3F2FD">
     <form @submit.prevent="submit">
       <h3>{{ title }}</h3>
-      <article v-if="fields.length">
+      <v-container v-if="fields.length">
         <div v-for="field in fields" :key="field.id">
-          <label :for="field.id">{{ field.label }}:</label>
-          <v-textarea v-if="field.id === 'content'" :name="field.id" v-model="field.value" outlined />
+          <v-textarea v-if="field.id === 'content'" v-model="field.value" counter :rules="rules"
+            :label="field.label" no-resize/>
           <v-text-field v-else :type="field.id === 'password' ? 'password' : 'text'" :name="field.id"
-            v-model="field.value" />
+            v-model="field.value" :label="field.label" :rules="tfrules"/>
         </div>
-      </article>
+      </v-container>
       <article v-else>
         <p>{{ content }}</p>
       </article>
@@ -44,7 +44,9 @@ export default {
       setUsername: false, // Whether or not stored username should be updated after form submission
       refreshFreets: false, // Whether or not stored freets should be updated after form submission
       alerts: {}, // Displays success/error messages encountered during form submission
-      callback: null // Function to run after successful form submission
+      callback: null, // Function to run after successful form submission
+      rules: [v => (v.length <= 140) && (v.length > 0) || 'Must be between 1 and 140 characters'],
+      tfrules: [v => (v.length > 0) || 'Must be at least 1 character'],
     };
   },
   methods: {

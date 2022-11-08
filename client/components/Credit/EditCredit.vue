@@ -2,26 +2,28 @@
 <!-- This is just an example; feel free to define any reusable components you want! -->
 
 <template>
-  <main>
-    <section>
+  <div>
+    <v-card color="#84FFFF" class="credit">
       <p>
-        Credit: {{ credit }}
+        <v-icon>mdi-credit-card</v-icon> Credit: {{ credit }}
       </p>
-      <button @click="modifyCredit">
+
+      <br/>
+      <v-btn @click="modifyCredit">
         <p v-if="given">
-          Take Away Credit
+          <v-icon>mdi-credit-card-minus</v-icon> Take Away Credit
         </p>
         <p v-else>
-          Give Credit
+          <v-icon>mdi-credit-card-plus</v-icon> Give Credit
         </p>
-      </button>
+      </v-btn>
       <section class="credit-alerts">
         <article v-for="(status, alert, index) in alerts" :key="index" :class="status">
           <p>{{ alert }}</p>
         </article>
       </section>
-    </section>
-  </main>
+    </v-card>
+  </div>
 
 
 </template>
@@ -90,43 +92,11 @@ export default {
 </script>
 
 <style scoped>
-main {
-  padding: 0 0 0 0;
+.credit {
+  padding: 20px;
   position: absolute;
-  width: 20%;
-}
-
-form {
-  border: 1px solid #111;
-  padding: 0.5rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  margin-bottom: 14px;
-  position: relative;
-}
-
-article>div {
-  display: flex;
-  flex-direction: column;
-}
-
-form>article p {
-  margin: 0;
-}
-
-form h3,
-form>* {
-  margin: 0.3em 0;
-}
-
-form h3 {
-  margin-top: 0;
-}
-
-textarea {
-  font-family: inherit;
-  font-size: inherit;
+  width: 17%;
+  text-align: center;
 }
 
 .credit-alerts {

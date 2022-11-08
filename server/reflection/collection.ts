@@ -15,12 +15,12 @@ class ReflectionCollection {
    * Add a new reflection
    *
    * @param {Types.ObjectId} uid - The user id of the associated user
-   * @param {Types.ObjectId} fid - The freet id of the associated freet
+   * @param {Types.ObjectId} fc - The freet id of the associated freet
    * @param {string} content - The content of the reflection
    * @return {Promise<HydratedDocument<Reflection>>} - The newly created Credit
    */
-  static async addOne(uid: Types.ObjectId, fid: Types.ObjectId, content: string): Promise<HydratedDocument<Reflection>> {
-    const reflection = new ReflectionModel({ associated_user: uid, associated_freet: fid, reflection_content: content, public: true });
+  static async addOne(uid: Types.ObjectId, fc: string, content: string): Promise<HydratedDocument<Reflection>> {
+    const reflection = new ReflectionModel({ associated_user: uid, freet_content: fc, reflection_content: content, public: true });
     await reflection.save(); // Saves user to MongoDB
     return reflection;
   }

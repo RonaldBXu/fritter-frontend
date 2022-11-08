@@ -3,20 +3,23 @@
 
 <template>
   <div>
-    <v-card class="scheduledfreet">
-      <header>
-        <h3 class="author">
-          @{{ $store.state.username }}
-        </h3>
-        <br />
-        <div v-if="editing">
+    <v-card class="scheduledfreet" color="#E3F2FD">
+      <div>
+        <div style="text-align:left">
+          <h3 class="author">
+            @{{ $store.state.username }}
+          </h3>
+        </div>
+        <div style="text-align:end;position:absolute;top:15px;right:10px">
+
+          <div v-if="editing">
             <v-btn @click="submitEdit">
               ✅ Save changes
             </v-btn>
             <v-btn @click="stopEditing">
               🚫 Discard changes
             </v-btn>
-            <v-btn @click="deleteFreet">
+            <v-btn @click="deleteScheduledFreet">
               🗑️ Delete
             </v-btn>
           </div>
@@ -28,37 +31,39 @@
               🗑️ Delete
             </v-btn>
           </div>
-      </header>
-      <div v-if="editing">
-        <p class="info">
-          Content
-        </p>
-        <v-textarea class="content" v-model="draft" />
+        </div>
+
       </div>
 
-      <p v-else class="content">
-        {{ scheduledfreet.content }}
-      </p>
+      <br />
       <div v-if="editing">
-        <p class="info">
-          Publish Date
-        </p>
-        <textarea class="content" :value="draft_date" @input="draft_date = $event.target.value" />
+        <v-textarea v-model="draft" outlined no-resize :rules="rules" counter/>
       </div>
-      <p v-else class="content">
-        Scheduled for {{ draft_date }}
-      </p>
+      <div v-else>
+        <p class="content">
+          {{ scheduledfreet.content }}
+        </p>
+      </div>
+
+      <div v-if="editing">
+        <v-text-field v-model="draft_date" label="Publish Date" />
+      </div>
+      <div v-else style="text-align:end">
+        <br />
+        <p class="content">
+          Scheduled for {{ draft_date }}
+        </p>
+      </div>
+
 
       <section class="alerts">
         <article v-for="(status, alert, index) in alerts" :key="index" :class="status">
           <p>{{ alert }}</p>
         </article>
       </section>
-      <br />
     </v-card>
-
+    <br />
   </div>
-
 </template>
 
 <script>
@@ -83,7 +88,8 @@ export default {
       editing: false, // Whether or not this scheduledfreet is in edit mode
       draft: this.scheduledfreet.content, // Potentially-new content for this scheduledfreet
       draft_date: this.dateToString(this.scheduledfreet.publish_date),
-      alerts: {} // Displays success/error messages encountered during scheduledfreet modification
+      alerts: {}, // Displays success/error messages encountered during scheduledfreet modification
+      rules: [v => (v.length <= 140) && (v.length > 0) || 'Must be between 1 and 140 characters'],
     };
   },
   methods: {
@@ -109,7 +115,8 @@ export default {
        */
       const params = {
         method: 'DELETE',
-        callback: () => {
+        callback: async () => {
+          await this.getSFs();
           this.$store.commit('alert', {
             message: 'Successfully deleted scheduledfreet!', status: 'success'
           });
@@ -179,7 +186,6 @@ export default {
 
 <style scoped>
 .scheduledfreet {
-  border: 1px solid #111;
   padding: 20px;
   position: relative;
 }

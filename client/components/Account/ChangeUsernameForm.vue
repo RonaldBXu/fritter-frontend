@@ -13,12 +13,13 @@ export default {
       hasBody: true,
       setUsername: true,
       fields: [
-        {id: 'username', label: 'Username', value: ''}
+        { id: 'username', label: 'Username', value: '' }
       ],
       title: 'Change username',
       callback: () => {
         const message = 'Successfully changed username!';
         this.$set(this.alerts, message, 'success');
+        this.$router.push('/').then(() => window.scrollTo(0, 0));
         setTimeout(() => this.$delete(this.alerts, message), 3000);
       }
     };

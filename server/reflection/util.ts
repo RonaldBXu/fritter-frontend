@@ -4,7 +4,7 @@ import type {Reflection} from './model';
 // Update this if you add a property to the Credit type!
 type ReflectionResponse = {
   _id: string; // MongoDB assigns each object this ID on creation
-  associated_freet: string;
+  freet_content: string;
   associated_user: string;
   public: boolean;
   reflection_content: string;
@@ -26,7 +26,7 @@ const constructReflectionResponse = (reflection: HydratedDocument<Reflection>): 
   };
   return {
     _id: reflectionCopy._id.toString(),
-    associated_freet: reflectionCopy.associated_freet.toString(),
+    freet_content: reflectionCopy.freet_content,
     associated_user: reflectionCopy.associated_user.toString(),
     public: reflectionCopy.public,
     reflection_content: reflectionCopy.reflection_content,

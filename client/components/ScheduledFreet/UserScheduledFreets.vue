@@ -2,24 +2,24 @@
 
 <template>
 
-  <v-card style="padding: 10px;">
-
-    <section v-if="sfs.length">
-      <header>
-        <div class="left">
-          <h2>
-            Scheduled Freets
-          </h2>
-        </div>
-      </header>
-      <ScheduledFreetComponent v-for="scheduledfreet in sfs" :key="scheduledfreet.id" :scheduledfreet="scheduledfreet"
-        :getSFs="getSFs" />
-    </section>
-    <article v-else>
+  <section v-if="sfs.length">
+    <header>
+      <div class="left">
+        <h2>
+          Scheduled Freets
+        </h2>
+      </div>
+    </header>
+    <br/>
+    <ScheduledFreetComponent v-for="scheduledfreet in sfs" :key="scheduledfreet.id" :scheduledfreet="scheduledfreet"
+      :getSFs="getSFs" />
+  </section>
+  <article v-else>
+    <v-card style="padding: 10px;">
       <h3>No Scheduled Freets!</h3>
-    </article>
+    </v-card>
 
-  </v-card>
+  </article>
 
 
 </template>

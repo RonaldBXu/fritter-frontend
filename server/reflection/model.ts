@@ -9,7 +9,7 @@ import {Schema, model} from 'mongoose';
 // Type definition for User on the backend
 export type Reflection = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
-  associated_freet: Types.ObjectId;
+  freet_content: string;
   associated_user: Types.ObjectId;
   public: boolean;
   reflection_content: string;
@@ -20,8 +20,8 @@ export type Reflection = {
 // type given by the type property, inside MongoDB
 const ReflectionSchema = new Schema<Reflection>({
   // The freet's id
-  associated_freet: {
-    type: Schema.Types.ObjectId,
+  freet_content: {
+    type: String,
     required: true
   },
   // The user's password

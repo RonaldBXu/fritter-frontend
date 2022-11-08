@@ -4,15 +4,19 @@
 <template>
   <main>
     <section>
+      <br/>
       <header>
         <h2>New to Fritter?</h2>
       </header>
+      <br/>
       <RegisterForm />
     </section>
     <section>
+      <br/>
       <header>
         <h2>Have an account?</h2>
       </header>
+      <br/>
       <LoginForm />
     </section>
   </main>
