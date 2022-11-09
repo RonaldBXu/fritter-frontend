@@ -10,6 +10,7 @@ import {Schema, model} from 'mongoose';
 export type Reflection = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
   freet_content: string;
+  original_author: string;
   associated_user: Types.ObjectId;
   public: boolean;
   reflection_content: string;
@@ -20,6 +21,10 @@ export type Reflection = {
 // type given by the type property, inside MongoDB
 const ReflectionSchema = new Schema<Reflection>({
   // The freet's id
+  original_author: {
+    type: String,
+    required: true
+  },
   freet_content: {
     type: String,
     required: true

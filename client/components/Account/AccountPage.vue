@@ -30,7 +30,7 @@
       </header>
       <br />
       <EditCredit :username="$route.params.username" />
-      <div style="margin-left:auto;margin-right:0;width:50%">
+      <div style="margin-left:auto;margin-right:0;width:70%">
         <section v-if="$store.state.freets.length">
           <FreetComponent v-for="freet in $store.state.freets" :key="freet.id" :freet="freet" :dispRoute="true"/>
         </section>

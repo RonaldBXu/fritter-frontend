@@ -2,7 +2,8 @@
 <!-- We've tagged some elements with classes; consider writing CSS using those classes to style them... -->
 
 <template>
-  <div v-if="(dispRoute && freet.author === $route.params.username) || !dispRoute">
+  <div v-if="(dispRoute && freet.author === $route.params.username) || !dispRoute" data-app>
+
     <v-card class="freet" color="#E3F2FD">
       <header>
         <h3 class="author" @click="toUser">
@@ -33,15 +34,28 @@
       </header>
       <br />
       <v-textarea v-if="editing" class="content" v-model="draft" outlined no-resize :rules="rules" counter />
-      <div v-else>
-        <p class="content">
-          {{ freet.content }}
-        </p>
+      <div v-else style="">
+        <v-row>
+          <v-col cols="9">
+            <p class="content">
+              {{ freet.content }}
+            </p>
+          </v-col>
+          <v-spacer></v-spacer>
+          <v-col cols="2">
+            <v-btn @click="toggleProvocative">
+              😠 Provocative
+            </v-btn>
+          </v-col>
+        </v-row>
         <br />
       </div>
       <div v-if="!editing">
-        <v-btn @click="reply">
+        <v-btn @click="reply_dialog = true;">
           ↩️ Reply
+        </v-btn>
+        <v-btn @click="reflect_dialog = true;">
+          💾 Save & Reflect
         </v-btn>
         <br />
         <br />
@@ -59,6 +73,50 @@
       </section>
     </v-card>
     <br />
+    <v-dialog v-model="reply_dialog" width="750">
+      <v-card style="padding:20px">
+        <h4>Reply</h4>
+        <br />
+        <v-textarea v-model="reply_draft" outlined no-resize :rules="rules" counter />
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="#E57373" text @click="() => {
+            reply_dialog = false;
+            reply_draft = '';
+          }">
+            Cancel
+          </v-btn>
+          <v-btn color="#00E676" text @click="submit_reply">
+            Reply to Freet
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="reflect_dialog" width="750">
+      <v-card style="padding:20px">
+        <h4>Reflect</h4>
+        <br />
+        <v-textarea v-model="reflect_draft" outlined no-resize />
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="#E57373" text @click="() => {
+            reflect_dialog = false;
+            reflect_draft = '';
+          }">
+            Cancel
+          </v-btn>
+          <v-btn color="#00E676" text @click="submit_reflect">
+            Reflect
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -82,11 +140,23 @@ export default {
       draft: this.freet.content, // Potentially-new content for this freet
       alerts: {}, // Displays success/error messages encountered during freet modification
       rules: [v => (v.length <= 140) && (v.length > 0) || 'Must be between 1 and 140 characters'],
+      reply_dialog: false,
+      reflect_dialog: false,
+      reply_draft: '',
+      reflect_draft: '',
     };
   },
   methods: {
-    reply() {
-      console.log('open modal for reply')
+    toggleProvocative() {
+      console.log('provocative');
+    },
+    submit_reply() {
+      this.reply_dialog = false;
+      console.log('reply')
+    },
+    submit_reflect() {
+      this.reflect_dialog = false;
+      console.log('reflect')
     },
     startEditing() {
       /**

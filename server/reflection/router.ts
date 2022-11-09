@@ -74,7 +74,8 @@ const router = express.Router();
  * @name POST /api/reflections
  *
  * @param {string} content - The content of the reflection
- * @param {string} freet_content - the id of the associated freet
+ * @param {string} freet_content - the content of the associated freet
+ * @param {string} oa - the author of the associated freet
  * @return {util.ReflectionResponse} - The created reflection
  * @throws {400} - If the reflection content is empty or a stream of empty spaces
  * @throws {403} - If the user is not logged in
@@ -86,7 +87,7 @@ const router = express.Router();
     reflectionValidator.isValidReflectionContent,
   ],
   async (req: Request, res: Response) => {
-    const reflection = await ReflectionCollection.addOne(req.session.userId, req.body.freet_content, req.body.content);
+    const reflection = await ReflectionCollection.addOne(req.session.userId, req.body.freet_content, req.body.content, req.body.oa);
     res.status(201).json({
       message: 'Your reflection was created successfully.',
       reflection: util.constructReflectionResponse(reflection)

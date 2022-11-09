@@ -8,6 +8,7 @@ type ReflectionResponse = {
   associated_user: string;
   public: boolean;
   reflection_content: string;
+  original_author: string;
 };
 
 /**
@@ -30,6 +31,7 @@ const constructReflectionResponse = (reflection: HydratedDocument<Reflection>): 
     associated_user: reflectionCopy.associated_user.toString(),
     public: reflectionCopy.public,
     reflection_content: reflectionCopy.reflection_content,
+    original_author: reflectionCopy.original_author,
   };
 };
 
