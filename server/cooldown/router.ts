@@ -1,6 +1,7 @@
-import type {Request, Response} from 'express';
+import type { Request, Response } from 'express';
 import express from 'express';
 import CooldownCollection from './collection';
+import UserCollection from '../user/collection';
 import * as cooldownValidator from './middleware';
 import * as userValidator from '../user/middleware';
 import * as util from './util';
@@ -17,7 +18,7 @@ const router = express.Router();
  * @throws {404} - If no cooldown object with associated freet id freetId exists
  *
  */
- router.get(
+router.get(
   '/:freetId?',
   [
     cooldownValidator.nullFreet,
@@ -26,7 +27,6 @@ const router = express.Router();
   async (req: Request, res: Response) => {
     const fid = req.params.freetId as string;
     const cooldown = await CooldownCollection.findOneByFreetId(fid);
-    console.log(cooldown)
     res.status(200).json({
       message: 'Here is the cooldown object.',
       cooldown: util.constructCooldownResponse(cooldown),
@@ -45,7 +45,7 @@ const router = express.Router();
  * @throws {404} - If the freet is not found
  * 
  */
- router.patch(
+router.patch(
   '/:freetId?',
   [
     cooldownValidator.nullFreet,
@@ -54,7 +54,8 @@ const router = express.Router();
   ],
   async (req: Request, res: Response) => {
     const prov = (req.body.provocative === 'yes');
-    const cooldown = await CooldownCollection.updateCooldown(req.session.userId, req.params.freetId, prov)
+    const username = (await UserCollection.findOneByUserId(req.session.userId)).username;
+    const cooldown = await CooldownCollection.updateCooldown(username, req.params.freetId, prov)
     res.status(200).json({
       message: 'Cooldown updated successfully.',
       cooldown: util.constructCooldownResponse(cooldown),
@@ -62,4 +63,4 @@ const router = express.Router();
   }
 );
 
-export {router as cooldownRouter};
+export { router as cooldownRouter };

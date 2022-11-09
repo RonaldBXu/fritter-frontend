@@ -7,6 +7,8 @@
       <br />
       <UserScheduledFreets />
       <br />
+      <UserReflections />
+      <br />
       <header>
         <h2>Account settings for @{{ $store.state.username }}</h2>
       </header>
@@ -31,9 +33,7 @@
       <br />
       <EditCredit :username="$route.params.username" />
       <div style="margin-left:auto;margin-right:0;width:70%">
-        <section v-if="$store.state.freets.length">
-          <FreetComponent v-for="freet in $store.state.freets" :key="freet.id" :freet="freet" :dispRoute="true"/>
-        </section>
+        <UserReflections />
       </div>
     </section>
   </main>
@@ -47,6 +47,7 @@ import LogoutForm from '@/components/Account/LogoutForm.vue';
 import UserScheduledFreets from '@/components/ScheduledFreet/UserScheduledFreets.vue';
 import FreetComponent from '@/components/Freet/FreetComponent.vue';
 import EditCredit from '@/components/Credit/EditCredit.vue';
+import UserReflections from '@/components/Reflection/UserReflections.vue';
 
 export default {
   name: 'AccountPage',
@@ -58,6 +59,7 @@ export default {
     UserScheduledFreets,
     EditCredit,
     FreetComponent,
+    UserReflections,
   }
 };
 </script>

@@ -10,8 +10,8 @@ import {Schema, model} from 'mongoose';
 export type Cooldown = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
   associated_freet: Types.ObjectId;
-  provocative: Array<Types.ObjectId>;
-  views: Array<Types.ObjectId>;
+  provocative: Array<string>;
+  views: Array<string>;
   inflammatory_designation: boolean;
 };
 
@@ -26,12 +26,12 @@ const CooldownSchema = new Schema<Cooldown>({
   },
   // The user's password
   provocative: {
-    type: [Schema.Types.ObjectId],
+    type: [String],
     required: true
   },
   // The date the user joined
   views: {
-    type: [Schema.Types.ObjectId],
+    type: [String],
     required: true
   },
   inflammatory_designation:{

@@ -1,6 +1,7 @@
-import type {Request, Response} from 'express';
+import type { Request, Response } from 'express';
 import express from 'express';
 import ReflectionCollection from './collection';
+import UserCollection from '../user/collection';
 import * as userValidator from '../user/middleware';
 import * as reflectionValidator from './middleware'
 import * as util from './util';
@@ -10,15 +11,15 @@ const router = express.Router();
 /**
  * View reflections
  *
- * @name GET /api/reflections?id=userId&public=public
+ * @name GET /api/reflections?id=userId&pub=pub
  *
  * @return {Array<util.ReflectionResponse>} - An object with reflections
- * @throws {400} - If id or public are empty
+ * @throws {400} - If id or pub are empty
  * @throws {403} - If the user is not logged in or if the user cannot view this reflection.
  * @throws {404} - If the user is not found.
  * 
  */
- router.get(
+router.get(
   '/',
   [
     reflectionValidator.nullGet,
@@ -27,10 +28,10 @@ const router = express.Router();
     reflectionValidator.canViewReflections,
   ],
   async (req: Request, res: Response) => {
-    const uid = req.query.id as string;
-    const reflection = await ReflectionCollection.getUserReflections(uid, req.query.public==='yes');
+    const user = (await UserCollection.findOneByUsername(req.query.id as string));
+    const reflection = await ReflectionCollection.getUserReflections(user._id, req.query.pub === 'yes');
     const ans = [];
-    for (const ref of reflection){
+    for (const ref of reflection) {
       ans.push(util.constructReflectionResponse(ref));
     }
     res.status(200).json({
@@ -51,7 +52,7 @@ const router = express.Router();
  * @throws {404} - If the reflection is not found.
  * 
  */
- router.patch(
+router.patch(
   '/:reflectionId?',
   [
     reflectionValidator.nullRefId,
@@ -60,7 +61,7 @@ const router = express.Router();
     reflectionValidator.validModifier,
   ],
   async (req: Request, res: Response) => {
-    const reflection = await ReflectionCollection.updateReflection(req.params.reflectionId, req.body.public==='yes');
+    const reflection = await ReflectionCollection.updateReflection(req.params.reflectionId, req.body.pub);
     res.status(200).json({
       message: 'reflection updated successfully.',
       reflection: util.constructReflectionResponse(reflection),
@@ -80,7 +81,7 @@ const router = express.Router();
  * @throws {400} - If the reflection content is empty or a stream of empty spaces
  * @throws {403} - If the user is not logged in
  */
- router.post(
+router.post(
   '/',
   [
     userValidator.isUserLoggedIn,
@@ -97,4 +98,4 @@ const router = express.Router();
   }
 );
 
-export {router as reflectionRouter};
+export { router as reflectionRouter };

@@ -7,7 +7,7 @@ export default {
   name: 'GetFreetsForm',
   mixins: [InlineForm],
   data() {
-    return {value: this.$store.state.filter};
+    return { value: this.$store.state.filter };
   },
   methods: {
     async submit() {
@@ -18,7 +18,6 @@ export default {
         if (!r.ok) {
           throw new Error(res.error);
         }
-
         this.$store.commit('updateFilter', this.value);
         this.$store.commit('updateFreets', res);
       } catch (e) {

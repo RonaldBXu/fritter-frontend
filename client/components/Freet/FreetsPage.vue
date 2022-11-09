@@ -3,21 +3,21 @@
 <template>
   <main>
     <section v-if="$store.state.username">
-      <br/>
+      <br />
       <header>
         <h2>Welcome @{{ $store.state.username }}</h2>
       </header>
-      <br/>
+      <br />
       <CreateFreetForm />
-      <br/>
+      <br />
       <CreateScheduledFreetForm />
     </section>
     <section v-else>
-      <br/>
+      <br />
       <header>
         <h2>Welcome to Fritter!</h2>
       </header>
-      <br/>
+      <br />
       <article>
         <h3>
           <router-link to="/login">
@@ -28,7 +28,7 @@
       </article>
     </section>
     <section>
-      <br/>
+      <br />
       <header>
         <div class="left">
           <h2>
@@ -39,27 +39,14 @@
           </h2>
         </div>
         <div class="right">
-          <GetFreetsForm
-            ref="getFreetsForm"
-            value="author"
-            placeholder="🔍 Author"
-            button="🔄 Get freets"
-          />
+          <GetFreetsForm ref="getFreetsForm" value="author" placeholder="🔍 Author" button="🔄 Get freets" />
         </div>
       </header>
-      <br/>
-      <section
-        v-if="$store.state.freets.length"
-      >
-        <FreetComponent
-          v-for="freet in $store.state.freets"
-          :key="freet.id"
-          :freet="freet"
-        />
+      <br />
+      <section v-if="$store.state.freets.length">
+        <FreetComponent v-for="freet in $store.state.freets" :key="freet.id" :freet="freet"/>
       </section>
-      <article
-        v-else
-      >
+      <article v-else>
         <h3>No freets found.</h3>
       </article>
     </section>
@@ -74,10 +61,10 @@ import GetFreetsForm from '@/components/Freet/GetFreetsForm.vue';
 
 export default {
   name: 'FreetPage',
-  components: {FreetComponent, GetFreetsForm, CreateFreetForm, CreateScheduledFreetForm},
+  components: { FreetComponent, GetFreetsForm, CreateFreetForm, CreateScheduledFreetForm },
   mounted() {
     this.$refs.getFreetsForm.submit();
-  }
+  },
 };
 </script>
 
@@ -87,14 +74,15 @@ section {
   flex-direction: column;
 }
 
-header, header > * {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+header,
+header>* {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 button {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 section .scrollbox {

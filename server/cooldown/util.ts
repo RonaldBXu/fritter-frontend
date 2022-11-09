@@ -5,8 +5,8 @@ import type {Cooldown} from './model';
 type CooldownResponse = {
   _id: string; // MongoDB assigns each object this ID on creation
   associated_freet: string;
-  provocative: Array<Types.ObjectId>;
-  views: Array<Types.ObjectId>;
+  provocative: Array<string>;
+  views: Array<String>;
   inflammatory_designation: boolean;
 };
 

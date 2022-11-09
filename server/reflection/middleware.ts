@@ -49,7 +49,8 @@ const validModifier = async (req: Request, res: Response, next: NextFunction) =>
  * Checks if the user is a valid viewer of these reflections.
  */
 const canViewReflections = async (req: Request, res: Response, next: NextFunction) => {
-  if (!(req.query.public==='yes') && req.session.userId !== req.query.id) {
+  const user = await UserCollection.findOneByUserId(req.session.userId as string);
+  if (req.query.pub !== 'yes' && (req.query.id as string) !== (user.username as string)) {
     res.status(403).json({
       error: 'You cannot view other users private reflections.'
     });
@@ -106,7 +107,7 @@ const doesUserExist = async (req: Request, res: Response, next: NextFunction) =>
   try {
     let user = undefined;
     if (req.query.id) {
-      user = await UserCollection.findOneByUserId(req.query.id as string);
+      user = await UserCollection.findOneByUsername(req.query.id as string);
     }
     if (!user) {
       res.status(404).json({
@@ -128,9 +129,9 @@ const doesUserExist = async (req: Request, res: Response, next: NextFunction) =>
  * Checks for null input for get request
  */
 const nullGet = async (req: Request, res: Response, next: NextFunction) => {
-  if (!req.query.id || !req.query.public) {
+  if (!req.query.id || !req.query.pub) {
     res.status(400).json({
-      error: 'cannot have empty userId or public'
+      error: 'cannot have empty userId or pub'
     });
     return;
   }
@@ -141,9 +142,9 @@ const nullGet = async (req: Request, res: Response, next: NextFunction) => {
  * Checks for null input for reflectionId
  */
 const nullRefId = async (req: Request, res: Response, next: NextFunction) => {
-  if (!req.params.reflectionId || !req.body.public) {
+  if (!req.params.reflectionId || req.body.pub === null || req.body.pub === undefined) {
     res.status(400).json({
-      error: 'cannot have empty reflectionId or public'
+      error: 'cannot have empty reflectionId or pub'
     });
     return;
   }

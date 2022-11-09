@@ -12,7 +12,7 @@ export type Reflection = {
   freet_content: string;
   original_author: string;
   associated_user: Types.ObjectId;
-  public: boolean;
+  pub: boolean;
   reflection_content: string;
 };
 
@@ -34,7 +34,7 @@ const ReflectionSchema = new Schema<Reflection>({
     type: Schema.Types.ObjectId,
     required: true
   },
-  public: {
+  pub: {
     type: Boolean,
     required: true
   },

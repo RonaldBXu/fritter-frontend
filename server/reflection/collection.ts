@@ -20,7 +20,7 @@ class ReflectionCollection {
    * @return {Promise<HydratedDocument<Reflection>>} - The newly created Credit
    */
   static async addOne(uid: Types.ObjectId, fc: string, content: string, oa: string): Promise<HydratedDocument<Reflection>> {
-    const reflection = new ReflectionModel({ associated_user: uid, freet_content: fc, reflection_content: content, public: true, original_author: oa });
+    const reflection = new ReflectionModel({ associated_user: uid, freet_content: fc, reflection_content: content, pub: true, original_author: oa });
     await reflection.save(); // Saves user to MongoDB
     return reflection;
   }
@@ -42,8 +42,9 @@ class ReflectionCollection {
    * @param {boolean} pub - true iff we are querying for public reflections
    * @return {Promise<Credit> | Promise<null>} - The user id of the credit with the given username, if any
    */
-  static async getUserReflections(uid: string, pub: boolean): Promise<Array<HydratedDocument<Reflection>>> {
-    return ReflectionModel.find({ associated_user: uid, public: pub });
+  static async getUserReflections(uid: Types.ObjectId, pub: boolean): Promise<Array<HydratedDocument<Reflection>>> {
+
+    return ReflectionModel.find({ associated_user: uid, pub: pub });
   }
 
   /**
@@ -55,7 +56,7 @@ class ReflectionCollection {
     */
   static async updateReflection(rid: string, pub: boolean): Promise<HydratedDocument<Reflection>> {
     const reflection = await ReflectionModel.findOne({ _id: rid });
-    reflection.public = pub;
+    reflection.pub = pub;
     await reflection.save();
     return reflection;
   }

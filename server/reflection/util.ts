@@ -1,12 +1,12 @@
-import type {HydratedDocument, Types} from 'mongoose';
-import type {Reflection} from './model';
+import type { HydratedDocument, Types } from 'mongoose';
+import type { Reflection } from './model';
 
 // Update this if you add a property to the Credit type!
 type ReflectionResponse = {
   _id: string; // MongoDB assigns each object this ID on creation
   freet_content: string;
   associated_user: string;
-  public: boolean;
+  pub: boolean;
   reflection_content: string;
   original_author: string;
 };
@@ -29,7 +29,7 @@ const constructReflectionResponse = (reflection: HydratedDocument<Reflection>): 
     _id: reflectionCopy._id.toString(),
     freet_content: reflectionCopy.freet_content,
     associated_user: reflectionCopy.associated_user.toString(),
-    public: reflectionCopy.public,
+    pub: reflectionCopy.pub,
     reflection_content: reflectionCopy.reflection_content,
     original_author: reflectionCopy.original_author,
   };

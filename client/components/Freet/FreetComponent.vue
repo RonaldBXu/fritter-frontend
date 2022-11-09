@@ -2,8 +2,7 @@
 <!-- We've tagged some elements with classes; consider writing CSS using those classes to style them... -->
 
 <template>
-  <div v-if="(dispRoute && freet.author === $route.params.username) || !dispRoute" data-app>
-
+  <div data-app>
     <v-card class="freet" color="#E3F2FD">
       <header>
         <h3 class="author" @click="toUser">
@@ -42,16 +41,14 @@
             </p>
           </v-col>
           <v-spacer></v-spacer>
-          <v-col cols="2">
-            <v-btn @click="toggleProvocative">
-              😠 Provocative
-            </v-btn>
+          <v-col cols="2.5">
+            <CooldownComponent :freet="freet" :cooldownCallback="set_cooldown" />
           </v-col>
         </v-row>
         <br />
       </div>
       <div v-if="!editing">
-        <v-btn @click="reply_dialog = true;">
+        <v-btn @click="navReply">
           ↩️ Reply
         </v-btn>
         <v-btn @click="reflect_dialog = true;">
@@ -60,11 +57,21 @@
         <br />
         <br />
       </div>
+      <v-row>
+        <v-col cols="9">
+          <p class="info">
+            Posted at {{ freet.dateModified }}
+            <i v-if="freet.dateModified !== freet.dateCreated">(edited)</i>
+          </p>
+        </v-col>
+        <v-spacer></v-spacer>
+        <v-col v-if="inflammatory" cols="2">
+          <h3 class="info">
+            🔥 Inflammatory!
+          </h3>
+        </v-col>
+      </v-row>
 
-      <p class="info">
-        Posted at {{ freet.dateModified }}
-        <i v-if="freet.dateModified !== freet.dateCreated">(edited)</i>
-      </p>
 
       <section class="alerts">
         <article v-for="(status, alert, index) in alerts" :key="index" :class="status">
@@ -73,28 +80,7 @@
       </section>
     </v-card>
     <br />
-    <v-dialog v-model="reply_dialog" width="750">
-      <v-card style="padding:20px">
-        <h4>Reply</h4>
-        <br />
-        <v-textarea v-model="reply_draft" outlined no-resize :rules="rules" counter />
 
-        <v-divider></v-divider>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="#E57373" text @click="() => {
-            reply_dialog = false;
-            reply_draft = '';
-          }">
-            Cancel
-          </v-btn>
-          <v-btn color="#00E676" text @click="submit_reply">
-            Reply to Freet
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
     <v-dialog v-model="reflect_dialog" width="750">
       <v-card style="padding:20px">
         <h4>Reflect</h4>
@@ -121,18 +107,16 @@
 </template>
 
 <script>
+import CooldownComponent from '@/components/Cooldown/Cooldown.vue';
 export default {
   name: 'FreetComponent',
+  components: { CooldownComponent },
   props: {
     // Data from the stored freet
     freet: {
       type: Object,
-      required: true
+      required: true,
     },
-    dispRoute: {
-      type: Boolean,
-      required: false
-    }
   },
   data() {
     return {
@@ -144,19 +128,31 @@ export default {
       reflect_dialog: false,
       reply_draft: '',
       reflect_draft: '',
+      inflammatory: false,
+      cooldown_dialog: false,
     };
   },
   methods: {
-    toggleProvocative() {
-      console.log('provocative');
+    onScroll() {
+      fetch(`/api/cooldowns/${this.freet._id}`, { headers: { 'Content-Type': 'application/json' }, method: 'PATCH', body: JSON.stringify({ provocative: 'no' }) });
     },
-    submit_reply() {
-      this.reply_dialog = false;
-      console.log('reply')
+    set_cooldown(inflam) {
+      this.inflammatory = inflam;
     },
-    submit_reflect() {
+    navReply() {
+      this.$router.push(`/reply/${this.freet._id}`)
+    },
+    async submit_reflect() {
       this.reflect_dialog = false;
-      console.log('reflect')
+      const r = await fetch(`/api/reflections`, { headers: { 'Content-Type': 'application/json' }, method: 'POST', body: JSON.stringify({ freet_content: this.freet.content, oa: this.freet.author, content: this.reflect_draft }) });
+      const res = await r.json();
+      if (!r.ok) {
+        this.$set(this.alerts, res.error, 'error');
+        setTimeout(() => this.$delete(this.alerts, res.error), 3000);
+        throw new Error(res.error);
+      }
+      this.$set(this.alerts, 'Success!', 'success');
+      setTimeout(() => this.$delete(this.alerts, 'Success!'), 3000);
     },
     startEditing() {
       /**

@@ -2,6 +2,7 @@ import type { HydratedDocument, Types } from 'mongoose';
 import type { Freet } from './model';
 import FreetModel from './model';
 import UserCollection from '../user/collection';
+import * as util from './util';
 
 /**
  * This files contains a class that has the functionality to explore freets
@@ -151,10 +152,10 @@ class FreetCollection {
    * @param {string} freetId - The freetId of freet we are finding
    * @return {Promise<HydratedDocument<Freet>>} - The thread for a freet
    */
-   static async findThread(freetId: Types.ObjectId | string): Promise<Array<HydratedDocument<Freet>>> {
+  static async findThread(freetId: Types.ObjectId | string): Promise<Array<util.FreetResponse>> {
     let freet = await this.findOne(freetId);
-    const thread = [freet];
-    for (const childFreet of freet.replies){
+    const thread = [util.constructFreetResponse(freet)];
+    for (const childFreet of freet.replies) {
       const childThread = await this.findThread(childFreet);
       thread.push(...childThread);
     }
