@@ -59,7 +59,13 @@ const store = new Vuex.Store({
        */
       const url = state.filter ? `/api/users/${state.filter}/freets` : '/api/freets';
       const res = await fetch(url).then(async r => r.json());
-      state.freets = res;
+      const fts = [];
+      for (const ft of res){
+        if (!ft.isReply){
+          fts.push(ft);
+        }
+      }
+      state.freets = [...fts];
     },
     async refreshScheduledFreets(state) {
       /**

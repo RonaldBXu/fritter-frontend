@@ -46,6 +46,8 @@ export default {
       const res = await r.json();
       if (!r.ok) {
         throw new Error(res.error);
+        this.$set(this.alerts, res.error, 'error');
+        setTimeout(() => this.$delete(this.alerts, res.error), 3000);
       }
       this.$set(this.alerts, 'Success!', 'success');
       setTimeout(() => this.$delete(this.alerts, 'Success!'), 3000);
@@ -57,6 +59,8 @@ export default {
       const res = await r.json();
       if (!r.ok) {
         throw new Error(res.error);
+        this.$set(this.alerts, res.error, 'error');
+        setTimeout(() => this.$delete(this.alerts, res.error), 3000);
       }
       this.cooldownCallback(res.cooldown.inflammatory_designation);
       this.toggled = this.$store.state.username ? res.cooldown.provocative.includes(this.$store.state.username) : false;

@@ -41,6 +41,7 @@
         <v-btn color="#E57373" text @click="() => {
           reply_dialog = false;
           reply_draft = '';
+          $router.push('/');
         }">
           Cancel
         </v-btn>

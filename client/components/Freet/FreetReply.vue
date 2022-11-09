@@ -3,81 +3,85 @@
 
 <template>
   <div data-app>
-    <v-card class="freet" color="#E3F2FD">
-      <header>
-        <h3 class="author" @click="toUser">
-          @{{ freet.author }}
-        </h3>
-        <div v-if="$store.state.username === freet.author" class="actions">
+    <v-row>
+      <v-spacer></v-spacer>
+      <v-col cols="11">
+        <v-card class="freet" color="#F3E5F5">
+
+          <header>
+            <h3 class="author" @click="toUser">
+              @{{ freet.author }}
+            </h3>
+            <div v-if="$store.state.username === freet.author" class="actions">
+              <br />
+              <div v-if="editing">
+                <v-btn @click="submitEdit">
+                  ✅ Save changes
+                </v-btn>
+                <v-btn @click="stopEditing">
+                  🚫 Discard changes
+                </v-btn>
+                <v-btn @click="deleteFreet">
+                  🗑️ Delete
+                </v-btn>
+              </div>
+              <div v-else>
+                <v-btn @click="startEditing">
+                  ✏️ Edit
+                </v-btn>
+                <v-btn @click="deleteFreet">
+                  🗑️ Delete
+                </v-btn>
+              </div>
+            </div>
+          </header>
           <br />
-          <div v-if="editing">
-            <v-btn @click="submitEdit">
-              ✅ Save changes
-            </v-btn>
-            <v-btn @click="stopEditing">
-              🚫 Discard changes
-            </v-btn>
-            <v-btn @click="deleteFreet">
-              🗑️ Delete
-            </v-btn>
+          <v-textarea v-if="editing" class="content" v-model="draft" outlined no-resize :rules="rules" counter />
+          <div v-else style="">
+            <v-row>
+              <v-col cols="9">
+                <p class="content">
+                  {{ freet.content }}
+                </p>
+              </v-col>
+              <v-spacer></v-spacer>
+              <v-col cols="2.5">
+                <CooldownComponent :freet="freet" :cooldownCallback="set_cooldown" />
+              </v-col>
+            </v-row>
+            <br />
           </div>
-          <div v-else>
-            <v-btn @click="startEditing">
-              ✏️ Edit
+          <div v-if="!editing">
+            <v-btn @click="reflect_dialog = true;">
+              💾 Save & Reflect
             </v-btn>
-            <v-btn @click="deleteFreet">
-              🗑️ Delete
-            </v-btn>
+            <br />
+            <br />
           </div>
-        </div>
-      </header>
-      <br />
-      <v-textarea v-if="editing" class="content" v-model="draft" outlined no-resize :rules="rules" counter />
-      <div v-else style="">
-        <v-row>
-          <v-col cols="9">
-            <p class="content">
-              {{ freet.content }}
-            </p>
-          </v-col>
-          <v-spacer></v-spacer>
-          <v-col cols="2.5">
-            <CooldownComponent :freet="freet" :cooldownCallback="set_cooldown" />
-          </v-col>
-        </v-row>
-        <br />
-      </div>
-      <div v-if="!editing">
-        <v-btn @click="navReply">
-          ↩️ Reply
-        </v-btn>
-        <v-btn @click="reflect_dialog = true;">
-          💾 Save & Reflect
-        </v-btn>
-        <br />
-        <br />
-      </div>
-      <v-row>
-        <v-col cols="9">
-          <p class="info">
-            Posted at {{ freet.dateModified }}
-            <i v-if="freet.dateModified !== freet.dateCreated">(edited)</i>
-          </p>
-        </v-col>
-        <v-spacer></v-spacer>
-        <v-col v-if="inflammatory" cols="2">
-          <h3 class="info">
-            🔥 Inflammatory!
-          </h3>
-        </v-col>
-      </v-row>
-      <section class="alerts">
-        <article v-for="(status, alert, index) in alerts" :key="index" :class="status">
-          <p>{{ alert }}</p>
-        </article>
-      </section>
-    </v-card>
-    <FreetReply v-for="freet in replies" :key="freet.id" :freet="freet" :fcUpdate="fcUpdate" />
+          <v-row>
+            <v-col cols="9">
+              <p class="info">
+                Posted at {{ freet.dateModified }}
+                <i v-if="freet.dateModified !== freet.dateCreated">(edited)</i>
+              </p>
+            </v-col>
+            <v-spacer></v-spacer>
+            <v-col v-if="inflammatory" cols="2">
+              <h3 class="info">
+                🔥 Inflammatory!
+              </h3>
+            </v-col>
+          </v-row>
+          <section class="alerts">
+            <article v-for="(status, alert, index) in alerts" :key="index" :class="status">
+              <p>{{ alert }}</p>
+            </article>
+          </section>
+        </v-card>
+      </v-col>
+    </v-row>
+
+
     <br />
 
     <v-dialog v-model="reflect_dialog" width="750">
@@ -103,30 +107,23 @@
       </v-card>
     </v-dialog>
   </div>
+
 </template>
 
 <script>
 import CooldownComponent from '@/components/Cooldown/Cooldown.vue';
-import FreetReply from '@/components/Freet/FreetReply.vue';
 export default {
-  name: 'FreetComponent',
-  components: { CooldownComponent, FreetReply },
+  name: 'FreetReply',
+  components: { CooldownComponent },
   props: {
     // Data from the stored freet
     freet: {
       type: Object,
       required: true,
     },
-    fpUpdate: {
+    fcUpdate: {
       type: Function,
       required: true,
-    }
-  },
-  async created() {
-    const r = await fetch(`/api/freets/${this.freet._id}`);
-    const res = await r.json();
-    if (res.thread.length > 1) {
-      this.replies = [...res.thread.slice(1)];
     }
   },
   data() {
@@ -145,14 +142,6 @@ export default {
     };
   },
   methods: {
-    async fcUpdate() {
-      const r = await fetch(`/api/freets/${this.freet._id}`);
-      const res = await r.json();
-      if (res.thread.length > 1) {
-        this.replies = [...res.thread.slice(1)];
-      }
-      this.$forceUpdate();
-    },
     onScroll() {
       fetch(`/api/cooldowns/${this.freet._id}`, { headers: { 'Content-Type': 'application/json' }, method: 'PATCH', body: JSON.stringify({ provocative: 'no' }) });
     },
@@ -251,7 +240,8 @@ export default {
 
         this.editing = false;
         this.$store.commit('refreshFreets');
-        this.fpUpdate();
+        this.$forceUpdate();
+        this.fcUpdate();
         params.callback();
       } catch (e) {
         this.$set(this.alerts, e, 'error');

@@ -29,6 +29,7 @@ class FreetCollection {
       content,
       dateModified: date,
       replies: [],
+      isReply: true,
     });
     await freet.save();
     const parentFreet = await this.findOne(replyingTo);
@@ -52,6 +53,7 @@ class FreetCollection {
       content,
       dateModified: date,
       replies: [],
+      isReply: false,
     });
     await freet.save(); // Saves freet to MongoDB
     return freet.populate('authorId');

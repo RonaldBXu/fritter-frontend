@@ -1,4 +1,4 @@
-import type { HydratedDocument } from 'mongoose';
+import type { HydratedDocument, Types } from 'mongoose';
 import moment from 'moment';
 import type { Freet, PopulatedFreet } from '../freet/model';
 
@@ -9,6 +9,8 @@ type FreetResponse = {
   dateCreated: string;
   content: string;
   dateModified: string;
+  replies: Array<string>;
+  isReply: boolean;
 };
 
 /**
@@ -34,12 +36,15 @@ const constructFreetResponse = (freet: HydratedDocument<Freet>): FreetResponse =
   };
   const { username } = freetCopy.authorId;
   delete freetCopy.authorId;
+  const strReplies = [...freetCopy.replies].map((v) => v.toString());
   return {
     ...freetCopy,
     _id: freetCopy._id.toString(),
     author: username,
     dateCreated: formatDate(freet.dateCreated),
-    dateModified: formatDate(freet.dateModified)
+    dateModified: formatDate(freet.dateModified),
+    replies: [...strReplies],
+    isReply: freetCopy.isReply,
   };
 };
 

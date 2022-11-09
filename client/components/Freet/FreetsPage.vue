@@ -20,9 +20,9 @@
       <br />
       <article>
         <h3>
-          <router-link to="/login">
-            Sign in
-          </router-link>
+          <v-btn @click="$router.push('/login')">
+            🔑 Sign In
+          </v-btn>
           to create, edit, and delete freets.
         </h3>
       </article>
@@ -44,7 +44,7 @@
       </header>
       <br />
       <section v-if="$store.state.freets.length">
-        <FreetComponent v-for="freet in $store.state.freets" :key="freet.id" :freet="freet"/>
+        <FreetComponent v-for="freet in $store.state.freets" :key="freet.id" :freet="freet" :fpUpdate="fpUpdate" />
       </section>
       <article v-else>
         <h3>No freets found.</h3>
@@ -65,6 +65,12 @@ export default {
   mounted() {
     this.$refs.getFreetsForm.submit();
   },
+  methods: {
+    async fpUpdate() {
+      await this.$store.commit('refreshFreets');
+      this.$forceUpdate();
+    }
+  }
 };
 </script>
 

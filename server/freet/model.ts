@@ -15,6 +15,7 @@ export type Freet = {
   content: string;
   dateModified: Date;
   replies: Array<Types.ObjectId>;
+  isReply: boolean;
 };
 
 export type PopulatedFreet = {
@@ -24,6 +25,7 @@ export type PopulatedFreet = {
   content: string;
   dateModified: Date;
   replies: Array<Types.ObjectId>;
+  isReply: boolean;
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
@@ -55,6 +57,10 @@ const FreetSchema = new Schema<Freet>({
   //ids of replying freets
   replies: {
     type: [Schema.Types.ObjectId],
+    required: true,
+  },
+  isReply: {
+    type: Boolean,
     required: true,
   }
 });

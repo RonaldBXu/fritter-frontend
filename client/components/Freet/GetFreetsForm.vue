@@ -18,8 +18,14 @@ export default {
         if (!r.ok) {
           throw new Error(res.error);
         }
+        const fts = [];
+        for (const ft of res) {
+          if (!ft.isReply) {
+            fts.push(ft);
+          }
+        }
         this.$store.commit('updateFilter', this.value);
-        this.$store.commit('updateFreets', res);
+        this.$store.commit('updateFreets', [...fts]);
       } catch (e) {
         if (this.value === this.$store.state.filter) {
           // This section triggers if you filter to a user but they
