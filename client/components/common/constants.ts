@@ -1,4 +1,4 @@
-const UPDATE_INTERVAL = 30000;
+const UPDATE_INTERVAL = 15000;
 
 export {
     UPDATE_INTERVAL,
