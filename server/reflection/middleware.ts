@@ -92,7 +92,7 @@ const isValidReflectionContent = (req: Request, res: Response, next: NextFunctio
   const content = req.body.content;
   if (!content.trim()) {
     res.status(400).json({
-      error: 'Freet content must be at least one character long.'
+      error: 'Reflection content must be at least one character long.'
     });
     return;
   }

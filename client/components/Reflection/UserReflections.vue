@@ -3,40 +3,58 @@
 <template>
   <div>
     <section v-if="refs.length">
+      <br />
       <header>
-        <h3 v-if="pub">
-          Public Reflections
-        </h3>
-        <h3 v-else>
-          Private Reflections
-        </h3>
+
+        <div style="margin:auto; text-align:center">
+          <h2 v-if="pub">
+            Public Reflections
+          </h2>
+          <h2 v-else>
+            Private Reflections
+          </h2>
+        </div>
+
       </header>
       <br />
-      <ReflectionComponent v-for="reflection in refs" :key="reflection.id" :reflection="reflection"
-        :getRefs="getRefs" />
+      <div v-if="$route.params.username === $store.state.username" style="margin:auto; text-align:center">
+
+        <v-btn @click="togglePub">
+          <p v-if="pub">
+            View Private Reflections
+          </p>
+          <p v-else>
+            View Public Reflections
+          </p>
+        </v-btn>
+      </div>
+      <br />
+      <div style="margin:auto;width:90%">
+        <ReflectionComponent v-for="reflection in refs" :key="reflection.id" :reflection="reflection"
+          :getRefs="getRefs" />
+      </div>
     </section>
     <article v-else>
-      <v-card style="padding: 10px;">
-        <h3 v-if="pub">No Public Reflections!</h3>
-        <h3 v-else>No Private Reflections!</h3>
-      </v-card>
-    </article>
-    <div v-if="$route.params.username === $store.state.username">
       <br />
-      <v-btn @click="togglePub">
-        <p v-if="pub">
-          View Private Reflections
-        </p>
-        <p v-else>
-          View Public Reflections
-        </p>
-      </v-btn>
-    </div>
+      <div style="margin:auto; text-align:center">
+        <h2 v-if="pub">No Public Reflections!</h2>
+        <h2 v-else>No Private Reflections!</h2>
+      </div>
+      <br />
+      <div v-if="$route.params.username === $store.state.username" style="margin:auto; text-align:center">
 
+        <v-btn @click="togglePub">
+          <p v-if="pub">
+            View Private Reflections
+          </p>
+          <p v-else>
+            View Public Reflections
+          </p>
+        </v-btn>
+      </div>
+    </article>
 
   </div>
-
-
 </template>
 
 <script>

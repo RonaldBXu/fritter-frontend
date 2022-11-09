@@ -42,6 +42,7 @@ export default {
     };
   },
   async created() {
+    if (this.$route.params.username !== this.$store.state.username) this.$router.push('/');
     await this.getSFs();
   },
   methods: {

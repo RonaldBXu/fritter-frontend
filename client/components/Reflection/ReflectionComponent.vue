@@ -12,22 +12,25 @@
         <p>{{ reflection.freet_content }}</p>
       </header>
       <br />
-      <div>
-        <h3>Reflection:</h3>
-        <p>
-          {{ reflection.reflection_content }}
-        </p>
-      </div>
+      <v-card style="padding:20px" color="#abefe8">
+        <div>
+          <h3>Reflection:</h3>
+          <p>
+            {{ reflection.reflection_content }}
+          </p>
+        </div>
 
-      <div v-if="$route.params.username === $store.state.username">
-        <br />
-        <v-btn v-if="reflection.pub" @click="makePrivate">
-          Make Private
-        </v-btn>
-        <v-btn v-else @click="makePublic">
-          Make Public
-        </v-btn>
-      </div>
+        <div v-if="$route.params.username === $store.state.username" style="text-align:end">
+          <br />
+          <v-btn v-if="reflection.pub" @click="makePrivate">
+            Make Private
+          </v-btn>
+          <v-btn v-else @click="makePublic">
+            Make Public
+          </v-btn>
+        </div>
+      </v-card>
+
 
       <section class="alerts">
         <article v-for="(status, alert, index) in alerts" :key="index" :class="status">

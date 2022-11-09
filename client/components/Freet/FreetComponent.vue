@@ -169,7 +169,6 @@ export default {
     },
     async submit_reflect() {
       this.reflect_dialog = false;
-      this.reflect_draft = '';
       const r = await fetch(`/api/reflections`, { headers: { 'Content-Type': 'application/json' }, method: 'POST', body: JSON.stringify({ freet_content: this.freet.content, oa: this.freet.author, content: this.reflect_draft }) });
       const res = await r.json();
       if (!r.ok) {
@@ -177,6 +176,7 @@ export default {
         setTimeout(() => this.$delete(this.alerts, res.error), 3000);
         throw new Error(res.error);
       }
+      this.reflect_draft = '';
       this.$set(this.alerts, 'Success!', 'success');
       setTimeout(() => this.$delete(this.alerts, 'Success!'), 3000);
     },
