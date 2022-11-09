@@ -5,7 +5,7 @@ import type { Cooldown } from './model';
 import CooldownModel from './model';
 
 const PROVOCATIVE_THRESHOLD = 0.5;
-const INITIAL_VIEWS = 1;
+const INITIAL_VIEWS = 5;
 
 /**
  * This file contains a class with functionality to interact with cooldowns stored
