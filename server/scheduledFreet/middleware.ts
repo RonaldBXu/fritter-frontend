@@ -84,7 +84,7 @@ const isValidDate = async (req: Request, res: Response, next: NextFunction) => {
   }
   const date = util.formatStringToDate(req.body.publish_date);
   const currDate = util.today();
-  const proposedTimeAdj = date.getTime() + TIME_OFFSET;
+  const proposedTimeAdj = date.getTime();
   const currTime = currDate.getTime();
   if (proposedTimeAdj < currTime) {
     res.status(412).json({
