@@ -124,7 +124,7 @@ export default {
     fcUpdate: {
       type: Function,
       required: true,
-    }
+    },
   },
   data() {
     return {

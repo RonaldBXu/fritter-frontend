@@ -44,7 +44,7 @@
       </header>
       <br />
       <section v-if="$store.state.freets.length">
-        <FreetComponent v-for="freet in $store.state.freets" :key="freet.id" :freet="freet" :fpUpdate="fpUpdate" />
+        <FreetComponent v-for="freet in $store.state.freets" :key="freet._id" :freet="freet" :fpUpdate="fpUpdate" />
       </section>
       <article v-else>
         <h3>No freets found.</h3>

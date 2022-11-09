@@ -77,7 +77,7 @@
         </article>
       </section>
     </v-card>
-    <FreetReply v-for="freet in replies" :key="freet.id" :freet="freet" :fcUpdate="fcUpdate" />
+    <FreetReply v-for="(reply, index) in replies" :key="index" :freet="reply" :fcUpdate="fcUpdate" />
     <br />
 
     <v-dialog v-model="reflect_dialog" width="750">
@@ -141,7 +141,7 @@ export default {
       reflect_draft: '',
       inflammatory: false,
       cooldown_dialog: false,
-      replies: [],
+      replies: {},
     };
   },
   methods: {
@@ -149,7 +149,11 @@ export default {
       const r = await fetch(`/api/freets/${this.freet._id}`);
       const res = await r.json();
       if (res.thread.length > 1) {
-        this.replies = [...res.thread.slice(1)];
+        let c = 0;
+        for (const rep of res.thread.slice(1)){
+          this.$set(this.replies, c, rep);
+          c = c + 1;
+        }
       }
       this.$forceUpdate();
     },
@@ -251,6 +255,7 @@ export default {
 
         this.editing = false;
         this.$store.commit('refreshFreets');
+        this.fcUpdate();
         this.fpUpdate();
         params.callback();
       } catch (e) {
