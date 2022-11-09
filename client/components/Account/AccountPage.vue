@@ -5,9 +5,30 @@
   <main>
     <section v-if="$store.state.username === $route.params.username">
       <br />
-      <UserScheduledFreets />
-      <br />
-      <UserReflections />
+      <div>
+        <div style="margin:auto; text-align:center">
+          <h2>General Content</h2>
+        </div>
+        <br />
+        <div style="margin:auto; text-align:center">
+          <v-row>
+            <v-spacer></v-spacer>
+            <v-spacer></v-spacer>
+            <v-col>
+              <v-btn @click="$router.push(`/scheduledfreets/${$store.state.username}`)">
+                📅 My Scheduled Freets
+              </v-btn>
+            </v-col>
+            <v-col>
+              <v-btn @click="$router.push(`/reflections/${$store.state.username}`)">
+                📝 My Reflections
+              </v-btn>
+            </v-col>
+            <v-spacer></v-spacer>
+            <v-spacer></v-spacer>
+          </v-row>
+        </div>
+      </div>
       <br />
       <header>
         <h2>Account settings for @{{ $store.state.username }}</h2>

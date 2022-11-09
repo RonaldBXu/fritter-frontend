@@ -4,7 +4,7 @@
 <template>
   <div>
     <v-card>
-      <v-app-bar absolute color="#42A5F5" elevate-on-scroll>
+      <v-app-bar absolute color="#FFEFC3" elevate-on-scroll>
         <img src="../../public/logo.svg" />
 
         <v-toolbar-title>Fritter</v-toolbar-title>

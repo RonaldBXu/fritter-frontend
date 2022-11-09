@@ -3,22 +3,27 @@
 <template>
 
   <section v-if="sfs.length">
+    <br />
     <header>
-      <div class="left">
+
+      <div style="margin:auto; text-align:center">
         <h2>
           Scheduled Freets
         </h2>
       </div>
     </header>
     <br />
-    <ScheduledFreetComponent v-for="scheduledfreet in sfs" :key="scheduledfreet._id" :scheduledfreet="scheduledfreet"
+    <div style="margin:auto;width:90%">
+      <ScheduledFreetComponent v-for="scheduledfreet in sfs" :key="scheduledfreet._id" :scheduledfreet="scheduledfreet"
       :getSFs="getSFs" />
+    </div>
+    
   </section>
   <article v-else>
-    <v-card style="padding: 10px;">
-      <h3>No Scheduled Freets!</h3>
-    </v-card>
-
+    <br />
+    <div style="margin:auto; text-align:center">
+      <h2>No Scheduled Freets!</h2>
+    </div>
   </article>
 
 
@@ -41,7 +46,7 @@ export default {
   },
   methods: {
     async getSFs() {
-      const url = `/api/scheduledfreets?authorId=${this.$store.state.username}`;
+      const url = `/api/scheduledfreets?authorId=${this.$route.params.username}`;
       const r = await fetch(url);
       const res = await r.json();
       if (!r.ok) {

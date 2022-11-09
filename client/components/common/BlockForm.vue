@@ -2,7 +2,7 @@
 <!-- This is just an example; feel free to define any reusable components you want! -->
 
 <template>
-  <v-card style="padding: 10px;" color="#E3F2FD">
+  <v-card style="padding: 10px;" color="#9BEBFF">
     <form @submit.prevent="submit">
       <h3>{{ title }}</h3>
       <div v-if="fields.length">

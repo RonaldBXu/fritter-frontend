@@ -37,7 +37,7 @@
 
       <br />
       <div v-if="editing">
-        <v-textarea v-model="draft" outlined no-resize :rules="rules" counter/>
+        <v-textarea v-model="draft" outlined no-resize :rules="rules" counter class="form-input"/>
       </div>
       <div v-else>
         <p class="content">
@@ -46,7 +46,7 @@
       </div>
 
       <div v-if="editing">
-        <v-text-field v-model="draft_date" label="Publish Date" />
+        <v-text-field v-model="draft_date" label="Publish Date" :rules="drules" class="form-input"/>
       </div>
       <div v-else style="text-align:end">
         <br />
@@ -90,6 +90,7 @@ export default {
       draft_date: this.dateToString(this.scheduledfreet.publish_date),
       alerts: {}, // Displays success/error messages encountered during scheduledfreet modification
       rules: [v => (v.length <= 140) && (v.length > 0) || 'Must be between 1 and 140 characters'],
+      drules: [date => (!(moment(date, "MM-DD-YYYY HH:mm", true) == null || !moment(date, "MM-DD-YYYY HH:mm", true).isValid())) || 'Must be valid date in <MM-DD-YYYY HH:mm> format'],
     };
   },
   methods: {
@@ -185,6 +186,10 @@ export default {
 </script>
 
 <style scoped>
+
+.form-input>>>.error--text {
+  color: rgb(255, 0, 0) !important;
+}
 .scheduledfreet {
   padding: 20px;
   position: relative;

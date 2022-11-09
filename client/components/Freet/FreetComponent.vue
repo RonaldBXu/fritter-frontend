@@ -3,7 +3,7 @@
 
 <template>
   <div data-app>
-    <v-card class="freet" color="#E3F2FD">
+    <v-card class="freet" color="#FFD5C1">
       <header>
         <h3 class="author" @click="toUser">
           @{{ freet.author }}
@@ -32,7 +32,7 @@
         </div>
       </header>
       <br />
-      <v-textarea v-if="editing" class="content" v-model="draft" outlined no-resize :rules="rules" counter />
+      <v-textarea v-if="editing" class="form-input" v-model="draft" outlined no-resize :rules="rules" counter />
       <div v-else style="">
         <v-row>
           <v-col cols="9">
@@ -84,7 +84,7 @@
       <v-card style="padding:20px">
         <h4>Reflect</h4>
         <br />
-        <v-textarea v-model="reflect_draft" outlined no-resize />
+        <v-textarea v-model="reflect_draft" outlined no-resize :rules="rrules" class="form-input"/>
 
         <v-divider></v-divider>
 
@@ -135,6 +135,7 @@ export default {
       draft: this.freet.content, // Potentially-new content for this freet
       alerts: {}, // Displays success/error messages encountered during freet modification
       rules: [v => (v.length <= 140) && (v.length > 0) || 'Must be between 1 and 140 characters'],
+      rrules: [v => (v.length > 0) || 'Must be between at least 1 character'],
       reply_dialog: false,
       reflect_dialog: false,
       reply_draft: '',
@@ -268,6 +269,9 @@ export default {
 </script>
 
 <style scoped>
+.form-input>>>.error--text {
+  color: rgb(255, 0, 0) !important;
+}
 .freet {
   border: 1px solid #111;
   padding: 20px;
