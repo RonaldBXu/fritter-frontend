@@ -5,14 +5,16 @@
   <v-card style="padding: 10px;" color="#E3F2FD">
     <form @submit.prevent="submit">
       <h3>{{ title }}</h3>
-      <v-container v-if="fields.length">
+      <div v-if="fields.length">
         <div v-for="field in fields" :key="field.id">
-          <v-textarea v-if="field.id === 'content'" v-model="field.value" counter :rules="rules"
-            :label="field.label" no-resize/>
+          <v-textarea v-if="field.id === 'content'" v-model="field.value" counter :rules="rules" :label="field.label"
+            no-resize class="form-input" />
+          <v-text-field v-else-if="field.id === 'publish_date'" :name="field.id" v-model="field.value"
+            :label="field.label" :rules="drules" class="form-input" />
           <v-text-field v-else :type="field.id === 'password' ? 'password' : 'text'" :name="field.id"
-            v-model="field.value" :label="field.label" :rules="tfrules"/>
+            v-model="field.value" :label="field.label" :rules="prules" class="form-input" />
         </div>
-      </v-container>
+      </div>
       <article v-else>
         <p>{{ content }}</p>
       </article>
@@ -30,7 +32,7 @@
 </template>
 
 <script>
-
+import moment from 'moment';
 export default {
   name: 'BlockForm',
   data() {
@@ -46,11 +48,14 @@ export default {
       alerts: {}, // Displays success/error messages encountered during form submission
       callback: null, // Function to run after successful form submission
       rules: [v => (v.length <= 140) && (v.length > 0) || 'Must be between 1 and 140 characters'],
-      tfrules: [v => (v.length > 0) || 'Must be at least 1 character'],
+      prules: [v => (v.length > 0) || 'Must be at least 1 character'],
+      drules: [date => (!(moment(date, "MM-DD-YYYY HH:mm", true) == null || !moment(date, "MM-DD-YYYY HH:mm", true).isValid())) || 'Must be valid date in <MM-DD-YYYY HH:mm> format'],
     };
   },
+
   methods: {
     async submit() {
+
       /**
         * Submits a form with the specified options from data().
         */
@@ -100,6 +105,10 @@ export default {
 </script>
 
 <style scoped>
+.form-input>>>.error--text {
+  color: rgb(255, 0, 0) !important;
+}
+
 form {
   padding: 0.5rem;
   display: flex;
