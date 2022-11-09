@@ -19,7 +19,6 @@ export default {
       title: 'Schedule a freet',
       refreshFreets: true,
       callback: () => {
-        console.log(moment().toDate())
         const message = 'Successfully scheduled a freet!';
         this.$set(this.alerts, message, 'success');
         setTimeout(() => this.$delete(this.alerts, message), 3000);
