@@ -30,10 +30,8 @@
         </v-col>
       </v-row>
       <br />
-      <h4>Reply</h4>
+      <v-textarea v-model="reply_draft" no-resize :rules="rules" counter class="form-input" label="Reply" />
       <br />
-      <v-textarea v-model="reply_draft" outlined no-resize :rules="rules" counter />
-
       <v-divider></v-divider>
 
       <v-card-actions>
@@ -97,7 +95,7 @@ export default {
       disabled: false,
     };
   },
-  mounted () {
+  mounted() {
     this.$store.commit('resetInterval')
   },
   async created() {
@@ -150,6 +148,10 @@ export default {
 </script>
 
 <style scoped>
+.form-input>>>.error--text {
+  color: rgb(255, 0, 0) !important;
+}
+
 .freet {
   border: 1px solid #111;
   padding: 20px;
