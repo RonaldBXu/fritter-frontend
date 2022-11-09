@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
+import * as CONSTANT from './components/common/constants'
 
 Vue.use(Vuex);
 
@@ -14,6 +15,7 @@ const store = new Vuex.Store({
     username: null, // Username of the logged in user
     alerts: {}, // global success/error messages encountered during submissions to non-visible forms
     scheduledfreets: [],
+    refreshInterval: null,
   },
   mutations: {
     alert(state, payload) {
@@ -53,6 +55,31 @@ const store = new Vuex.Store({
        */
       state.scheduledfreets = scheduledfreets;
     },
+    setStateInterval(state) {
+      /**
+       * Update the stored scheduled freets
+       * @param scheduledfreets - scheduled Freets to store
+       */
+      if (state.refreshInterval) clearInterval(state.refreshInterval);
+      state.refreshInterval = setInterval(async () => {
+        const url = state.filter ? `/api/users/${state.filter}/freets` : '/api/freets';
+        const res = await fetch(url).then(async r => r.json());
+        const fts = [];
+        for (const ft of res) {
+          if (!ft.isReply) {
+            fts.push(ft);
+          }
+        }
+        state.freets = [...fts];
+      }, CONSTANT.UPDATE_INTERVAL)
+    },
+    resetInterval(state) {
+      /**
+       * Update the stored scheduled freets
+       * @param scheduledfreets - scheduled Freets to store
+       */
+      if (state.refreshInterval) clearInterval(state.refreshInterval);
+    },
     async refreshFreets(state) {
       /**
        * Request the server for the currently available freets.
@@ -60,8 +87,8 @@ const store = new Vuex.Store({
       const url = state.filter ? `/api/users/${state.filter}/freets` : '/api/freets';
       const res = await fetch(url).then(async r => r.json());
       const fts = [];
-      for (const ft of res){
-        if (!ft.isReply){
+      for (const ft of res) {
+        if (!ft.isReply) {
           fts.push(ft);
         }
       }
@@ -71,9 +98,10 @@ const store = new Vuex.Store({
       /**
        * Request the server for the currently available freets.
        */
+
       const url = `/api/scheduledfreets?authorId=${state.username}`;
       const res = await fetch(url).then(async r => r.json());
-      state.scheduledfreets = res;
+      state.scheduledfreets = [...res];
     }
   },
   // Store data across page refreshes, only discard on browser close

@@ -55,7 +55,7 @@ class ScheduledFreetCollection {
    */
   static async findAllByUsername(username: string): Promise<Array<HydratedDocument<ScheduledFreet>>> {
     const author = await UserCollection.findOneByUsername(username);
-    return ScheduledFreetModel.find({ associated_user: author._id });
+    return ScheduledFreetModel.find({ associated_user: author._id }).sort({ publish_date: 1 });
   }
 
   /**
@@ -65,7 +65,7 @@ class ScheduledFreetCollection {
    * @return {Promise<HydratedDocument<Freet>[]>} - An array of all of the freets
    */
   static async findAllByUserId(userId: Types.ObjectId): Promise<Array<HydratedDocument<ScheduledFreet>>> {
-    return ScheduledFreetModel.find({ associated_user: userId });
+    return ScheduledFreetModel.find({ associated_user: userId }).sort({ publish_date: 1 });
   }
 
   /**

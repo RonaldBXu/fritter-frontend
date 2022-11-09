@@ -10,8 +10,8 @@
         </h2>
       </div>
     </header>
-    <br/>
-    <ScheduledFreetComponent v-for="scheduledfreet in sfs" :key="scheduledfreet.id" :scheduledfreet="scheduledfreet"
+    <br />
+    <ScheduledFreetComponent v-for="scheduledfreet in sfs" :key="scheduledfreet._id" :scheduledfreet="scheduledfreet"
       :getSFs="getSFs" />
   </section>
   <article v-else>
@@ -26,6 +26,7 @@
 
 <script>
 import ScheduledFreetComponent from '@/components/ScheduledFreet/ScheduledFreetComponent.vue';
+import * as CONSTANT from '@/components/common/constants.ts'
 
 export default {
   name: 'UserScheduledFreets',

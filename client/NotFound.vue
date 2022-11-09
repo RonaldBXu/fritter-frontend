@@ -13,3 +13,12 @@
     </section>
   </main>
 </template>
+
+<script>
+export default {
+  name: 'NotFound',
+  mounted() {
+    this.$store.commit('resetInterval')
+  },
+};
+</script>

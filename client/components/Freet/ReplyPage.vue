@@ -97,6 +97,9 @@ export default {
       disabled: false,
     };
   },
+  mounted () {
+    this.$store.commit('resetInterval')
+  },
   async created() {
     const r = await fetch(`/api/freets/${this.$route.params.freetid}`);
     const res = await r.json();

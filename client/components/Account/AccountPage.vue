@@ -60,6 +60,10 @@ export default {
     EditCredit,
     FreetComponent,
     UserReflections,
-  }
+  },
+  mounted() {
+    this.$store.commit('resetInterval')
+  },
+
 };
 </script>

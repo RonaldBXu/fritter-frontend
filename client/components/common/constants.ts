@@ -1,0 +1,5 @@
+const UPDATE_INTERVAL = 30000;
+
+export {
+    UPDATE_INTERVAL,
+}

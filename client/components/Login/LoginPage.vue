@@ -31,6 +31,9 @@ export default {
   components: {
     RegisterForm,
     LoginForm
-  }
+  },
+  mounted () {
+    this.$store.commit('resetInterval')
+  },
 };
 </script>

@@ -62,14 +62,16 @@ import GetFreetsForm from '@/components/Freet/GetFreetsForm.vue';
 export default {
   name: 'FreetPage',
   components: { FreetComponent, GetFreetsForm, CreateFreetForm, CreateScheduledFreetForm },
-  mounted() {
-    this.$refs.getFreetsForm.submit();
+  async mounted() {
+    this.$refs.getFreetsForm.submit()
+    this.$store.commit('resetInterval')
+    this.$store.commit('setStateInterval')
   },
   methods: {
     async fpUpdate() {
       await this.$store.commit('refreshFreets');
       this.$forceUpdate();
-    }
+    },
   }
 };
 </script>
